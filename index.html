@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tcawhtml · neon code playground</title>
+    <!-- favicon & logo (same as requested) -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png">
+    <style>
+        /* ----- GLOBAL RESET & DARK + NEON GREEN THEME ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #0a0c0a;
+            color: #c0ffc0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* neon glow & borders */
+        .neon-border {
+            border: 1px solid #0f0;
+            box-shadow: 0 0 8px #0f0, 0 0 2px #0f0 inset;
+            border-radius: 8px;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+        }
+
+        /* header / logo area */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 0 8px #0f0);
+        }
+
+        .site-title {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #0f0;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            margin-right: auto;
+        }
+
+        .account-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #0a1a0a;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 6px #0f0;
+        }
+
+        .account-email {
+            font-size: 0.9rem;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #9f9;
+        }
+
+        /* main layout: editor left, tools right */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        /* ----- CODE EDITOR SECTION ----- */
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            min-height: 500px;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            background: #0f1a0f;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 0 4px #0f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: #1f3f1f;
+            box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset;
+            transform: scale(1.02);
+        }
+
+        .btn-primary {
+            background: #0f0;
+            color: #0a0a0a;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 12px #0f0;
+        }
+
+        .btn-primary:hover {
+            background: #5f5;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        /* three code panes (html, css, js) */
+        .code-panes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .code-pane {
+            display: flex;
+            flex-direction: column;
+            background: #0e140e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 10px #0f05;
+        }
+
+        .pane-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            background: #0a1a0a;
+            border-bottom: 1px solid #0f0;
+            color: #0f0;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pane-header span {
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .code-editor {
+            width: 100%;
+            background: #0a0f0a;
+            color: #b0ffb0;
+            border: none;
+            padding: 0.8rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            outline: none;
+            line-height: 1.5;
+            min-height: 120px;
+            border: 0;
+        }
+
+        .code-editor:focus {
+            background: #0f160f;
+            box-shadow: 0 0 0 1px #0f0 inset;
+        }
+
+        /* preview iframe */
+        .preview-box {
+            background: #050805;
+            border-radius: 8px;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 16px #0f08;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+        .preview-label {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 0.65rem;
+            color: #0f0;
+            background: #000c;
+            padding: 2px 6px;
+            border-radius: 12px;
+            z-index: 5;
+            border: 1px solid #0f0;
+        }
+
+        iframe#previewFrame {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border: none;
+        }
+
+        /* ----- RIGHT SIDEBAR: AI shortcuts + uploads ----- */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background: #0d140d;
+            border: 1px solid #0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 0 14px #0f04;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #0f0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #0f04;
+            padding-bottom: 0.4rem;
+        }
+
+        .ai-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .ai-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #0a120a;
+            padding: 0.6rem 0.8rem;
+            border-radius: 40px;
+            border: 1px solid #0f0;
+            color: #c0ffc0;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.15s;
+            box-shadow: 0 0 4px #0f0;
+        }
+
+        .ai-link:hover {
+            background: #1a2a1a;
+            box-shadow: 0 0 12px #0f0;
+            transform: translateX(4px);
+        }
+
+        .ai-link img {
+            width: 18px;
+            height: 18px;
+            filter: drop-shadow(0 0 4px #0f0);
+        }
+
+        .ai-icon-placeholder {
+            display: inline-block;
+            width: 18px;
+            text-align: center;
+            font-weight: bold;
+            color: #0f0;
+            font-size: 1.1rem;
+        }
+
+        .api-key-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .api-key-input {
+            flex: 1;
+            background: #0a0f0a;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            outline: none;
+        }
+
+        .api-key-input::placeholder {
+            color: #0f04;
+        }
+
+        .small-btn {
+            background: #0f1a0f;
+            border: 1px solid #0f0;
+            color: #0f0;
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        /* upload area */
+        .upload-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            background: #0a0f0a;
+            border: 1px dashed #0f0;
+            border-radius: 20px;
+            padding: 0.4rem;
+            color: #0f0;
+            font-size: 0.7rem;
+            width: 100%;
+        }
+
+        /* profile / login modal style (inline simplified) */
+        .login-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .email-input {
+            background: #0a0f0a;
+            border: 1px solid #0f0;
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            color: #0f0;
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+        }
+
+        /* games list */
+        .games-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .game-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0a120a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            border-left: 3px solid #0f0;
+            font-size: 0.8rem;
+        }
+
+        .game-item a {
+            color: #0f0;
+            text-decoration: none;
+            font-weight: bold;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .game-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* utility */
+        .mt-2 { margin-top: 0.8rem; }
+        .text-dim { color: #6f9f6f; }
+        .flex { display: flex; }
+        .gap-2 { gap: 0.5rem; }
+        .flex-wrap { flex-wrap: wrap; }
+        .hidden { display: none; }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0f0;
+            border-radius: 10px;
+            box-shadow: 0 0 8px #0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <img class="logo-img" src="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png" alt="tcawhtml logo">
+        <div class="site-title">tcawhtml</div>
+        <div class="account-badge" id="accountBadge">
+            <span class="account-email" id="displayEmail">not logged in</span>
+            <button class="btn" id="loginToggleBtn" style="padding: 0.2rem 1rem;">login</button>
+        </div>
+    </div>
+
+    <!-- LOGIN / EMAIL OVERLAY (simple modal, visible when toggled) -->
+    <div id="loginPanel" class="card hidden" style="position: fixed; top: 80px; right: 20px; width: 280px; z-index: 1000;">
+        <div class="card-title">📧 email login</div>
+        <div class="login-area">
+            <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" value="">
+            <button class="btn btn-primary" id="doLoginBtn">login / create</button>
+            <p class="text-dim" style="font-size:0.65rem;">no password, just email. stored in localStorage.</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-grid">
+        <!-- LEFT: EDITOR -->
+        <div class="editor-section">
+            <div class="editor-toolbar">
+                <button class="btn btn-primary" id="runBtn">▶ RUN</button>
+                <button class="btn" id="resetBtn">⟲ RESET</button>
+                <button class="btn" id="saveSiteBtn">💾 save to profile</button>
+                <span style="margin-left:auto; font-size:0.75rem; color:#0f0;">live preview →</span>
+            </div>
+            <div class="code-panes">
+                <!-- HTML -->
+                <div class="code-pane">
+                    <div class="pane-header"><span>HTML</span><span>index.html</span></div>
+                    <textarea id="htmlEditor" class="code-editor" spellcheck="false" placeholder="<h1>Hello neon</h1>"><h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>
+<p>live playground</p></textarea>
+                </div>
+                <!-- CSS -->
+                <div class="code-pane">
+                    <div class="pane-header"><span>CSS</span><span>style.css</span></div>
+                    <textarea id="cssEditor" class="code-editor" spellcheck="false" placeholder="body { background: #0a0; }">body {
+    background: #0a0f0a;
+    color: #0f0;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+h1 { text-shadow: 0 0 20px #0f0; }</textarea>
+                </div>
+                <!-- JS -->
+                <div class="code-pane">
+                    <div class="pane-header"><span>JS</span><span>script.js</span></div>
+                    <textarea id="jsEditor" class="code-editor" spellcheck="false" placeholder="console.log('neon')">console.log('tcawhtml ready');</textarea>
+                </div>
+            </div>
+            <!-- PREVIEW -->
+            <div class="preview-box">
+                <div class="preview-label">PREVIEW</div>
+                <iframe id="previewFrame" title="live preview"></iframe>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sidebar">
+            <!-- AI SHORTCUTS -->
+            <div class="card">
+                <div class="card-title">🤖 AI ASSISTANTS</div>
+                <div class="ai-grid">
+                    <a href="https://gemini.google.com" target="_blank" class="ai-link">
+                        <span class="ai-icon-placeholder">✦</span> Gemini
+                    </a>
+                    <a href="https://claude.ai" target="_blank" class="ai-link">
+                        <span class="ai-icon-placeholder">⌬</span> Claude
+                    </a>
+                    <a href="https://chat.openai.com" target="_blank" class="ai-link">
+                        <span class="ai-icon-placeholder">◍</span> ChatGPT
+                    </a>
+                    <a href="https://chat.deepseek.com" target="_blank" class="ai-link">
+                        <span class="ai-icon-placeholder">⌁</span> DeepSeek
+                    </a>
+                    <a href="https://grok.com" target="_blank" class="ai-link">
+                        <span class="ai-icon-placeholder">⚡</span> Grok
+                    </a>
+                </div>
+                <!-- API key quick set (no backend, just client) -->
+                <div class="api-key-row">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="API key (optional)">
+                    <button class="small-btn" id="saveApiKeyBtn">set</button>
+                </div>
+                <p style="font-size:0.6rem; margin-top:4px; color:#6f9f6f;">keys stored locally</p>
+            </div>
+
+            <!-- USER PROFILE / UPLOAD -->
+            <div class="card">
+                <div class="card-title">👤 PROFILE & UPLOADS</div>
+                <div id="profileSection">
+                    <div id="loggedOutMsg" class="text-dim" style="font-size:0.8rem;">Login with email to enable uploads.</div>
+                    <div id="loggedInMsg" class="hidden">
+                        <div style="font-size:0.8rem; margin-bottom:6px;">📧 <span id="profileEmail"></span></div>
+                        <div class="upload-row">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="gameFileInput" accept=".html,.htm,.js,.css,.zip,.rar">
+                                <button class="small-btn" id="uploadGameBtn">upload</button>
+                            </div>
+                            <p style="font-size:0.6rem;">upload HTML game / site (stored locally)</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- GAMES LIST -->
+                <div class="mt-2">
+                    <div style="font-size:0.75rem; color:#0f0; margin-bottom:4px;">🎮 UPLOADED GAMES</div>
+                    <div id="gamesContainer" class="games-list">
+                        <div class="text-dim" style="font-size:0.7rem;">no games yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- script -->
+    <script>
+        (function() {
+            // ----- DOM refs -----
+            const htmlEditor = document.getElementById('htmlEditor');
+            const cssEditor = document.getElementById('cssEditor');
+            const jsEditor = document.getElementById('jsEditor');
+            const previewFrame = document.getElementById('previewFrame');
+            const runBtn = document.getElementById('runBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const saveSiteBtn = document.getElementById('saveSiteBtn');
+            const loginToggleBtn = document.getElementById('loginToggleBtn');
+            const loginPanel = document.getElementById('loginPanel');
+            const emailInput = document.getElementById('emailInput');
+            const doLoginBtn = document.getElementById('doLoginBtn');
+            const displayEmail = document.getElementById('displayEmail');
+            const accountBadge = document.getElementById('accountBadge');
+            const loggedOutMsg = document.getElementById('loggedOutMsg');
+            const loggedInMsg = document.getElementById('loggedInMsg');
+            const profileEmail = document.getElementById('profileEmail');
+            const gameFileInput = document.getElementById('gameFileInput');
+            const uploadGameBtn = document.getElementById('uploadGameBtn');
+            const gamesContainer = document.getElementById('gamesContainer');
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+
+            // ----- state -----
+            let currentUserEmail = localStorage.getItem('tcaw_user_email') || null;
+            let uploadedGames = []; // array of { name, content, type, email }
+
+            // load games from localStorage
+            function loadGamesFromStorage() {
+                const stored = localStorage.getItem('tcaw_games');
+                if (stored) {
+                    try {
+                        uploadedGames = JSON.parse(stored);
+                    } catch (e) {
+                        uploadedGames = [];
+                    }
+                } else {
+                    uploadedGames = [];
+                }
+                renderGames();
+            }
+
+            // save games to localStorage
+            function saveGamesToStorage() {
+                localStorage.setItem('tcaw_games', JSON.stringify(uploadedGames));
+            }
+
+            // render games list
+            function renderGames() {
+                if (!gamesContainer) return;
+                if (!uploadedGames.length) {
+                    gamesContainer.innerHTML = '<div class="text-dim" style="font-size:0.7rem;">no games yet</div>';
+                    return;
+                }
+                let html = '';
+                uploadedGames.forEach((game, idx) => {
+                    html += `<div class="game-item">
+                        <span>${escapeHtml(game.name)}</span>
+                        <a href="#" data-game-index="${idx}" class="play-game-link">▶ play</a>
+                    </div>`;
+                });
+                gamesContainer.innerHTML = html;
+
+                // attach click handlers to play links (open in new window using blob)
+                document.querySelectorAll('.play-game-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const idx = link.dataset.gameIndex;
+                        if (idx !== undefined && uploadedGames[idx]) {
+                            const game = uploadedGames[idx];
+                            const newWin = window.open();
+                            newWin.document.write(game.content);
+                            newWin.document.close();
+                        }
+                    });
+                });
+            }
+
+            // simple escape
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ----- preview compile & run -----
+            function runPreview() {
+                const html = htmlEditor.value;
+                const css = cssEditor.value;
+                const js = jsEditor.value;
+
+                const fullDoc = `<!DOCTYPE html>
+<html>
+<head><style>${css}</style></head>
+<body>${html}
+<script>${js}<\/script>
+</body>
+</html>`;
+
+                const blob = new Blob([fullDoc], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                previewFrame.src = url;
+                // revoke after a while? not necessary now but we can keep track
+            }
+
+            // reset editors to initial
+            function resetEditors() {
+                htmlEditor.value = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
+                cssEditor.value = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
+                jsEditor.value = `console.log('tcawhtml ready');`;
+                runPreview();
+            }
+
+            // ----- login / account -----
+            function updateUIForUser() {
+                if (currentUserEmail) {
+                    displayEmail.textContent = currentUserEmail;
+                    loginToggleBtn.textContent = 'logout';
+                    loggedOutMsg.classList.add('hidden');
+                    loggedInMsg.classList.remove('hidden');
+                    profileEmail.textContent = currentUserEmail;
+                } else {
+                    displayEmail.textContent = 'not logged in';
+                    loginToggleBtn.textContent = 'login';
+                    loggedOutMsg.classList.remove('hidden');
+                    loggedInMsg.classList.add('hidden');
+                }
+                renderGames();
+            }
+
+            function loginWithEmail(email) {
+                if (!email || !email.includes('@')) {
+                    alert('please enter a valid email');
+                    return;
+                }
+                currentUserEmail = email;
+                localStorage.setItem('tcaw_user_email', email);
+                updateUIForUser();
+                loginPanel.classList.add('hidden');
+                emailInput.value = '';
+            }
+
+            function logout() {
+                currentUserEmail = null;
+                localStorage.removeItem('tcaw_user_email');
+                updateUIForUser();
+            }
+
+            // ----- save site to profile (store in games list as well) -----
+            function saveCurrentSite() {
+                if (!currentUserEmail) {
+                    alert('login first to save your site');
+                    return;
+                }
+                const name = prompt('give your site/game a name', 'my-neon-site');
+                if (!name) return;
+
+                const html = htmlEditor.value;
+                const css = cssEditor.value;
+                const js = jsEditor.value;
+
+                const fullContent = `<!DOCTYPE html>
+<html>
+<head><style>${css}</style></head>
+<body>${html}
+<script>${js}<\/script>
+</body>
+</html>`;
+
+                uploadedGames.push({
+                    name: name,
+                    content: fullContent,
+                    email: currentUserEmail,
+                    timestamp: Date.now()
+                });
+
+                saveGamesToStorage();
+                renderGames();
+                alert('site saved to your profile!');
+            }
+
+            // ----- upload file (read as text) -----
+            function handleFileUpload() {
+                if (!currentUserEmail) {
+                    alert('login to upload games');
+                    return;
+                }
+                const file = gameFileInput.files[0];
+                if (!file) {
+                    alert('select a file first');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    uploadedGames.push({
+                        name: file.name,
+                        content: content,
+                        email: currentUserEmail,
+                        timestamp: Date.now()
+                    });
+                    saveGamesToStorage();
+                    renderGames();
+                    alert(`"${file.name}" uploaded!`);
+                    gameFileInput.value = '';
+                };
+                reader.readAsText(file);
+            }
+
+            // ----- API key store (local only) -----
+            function saveApiKey() {
+                const key = apiKeyInput.value.trim();
+                if (key) {
+                    localStorage.setItem('tcaw_api_key', key);
+                    alert('API key saved locally.');
+                } else {
+                    localStorage.removeItem('tcaw_api_key');
+                    alert('API key removed.');
+                }
+            }
+
+            // ----- initialisation -----
+            function init() {
+                // restore API key if any
+                const storedKey = localStorage.getItem('tcaw_api_key');
+                if (storedKey) apiKeyInput.value = storedKey;
+
+                // restore user
+                updateUIForUser();
+
+                // load games
+                loadGamesFromStorage();
+
+                // run preview initially
+                runPreview();
+
+                // ----- event listeners -----
+                runBtn.addEventListener('click', runPreview);
+
+                resetBtn.addEventListener('click', resetEditors);
+
+                saveSiteBtn.addEventListener('click', saveCurrentSite);
+
+                // login toggle button
+                loginToggleBtn.addEventListener('click', () => {
+                    if (currentUserEmail) {
+                        logout();
+                    } else {
+                        loginPanel.classList.toggle('hidden');
+                    }
+                });
+
+                // do login
+                doLoginBtn.addEventListener('click', () => {
+                    loginWithEmail(emailInput.value.trim());
+                });
+
+                // upload button
+                uploadGameBtn.addEventListener('click', handleFileUpload);
+
+                // save api key
+                saveApiKeyBtn.addEventListener('click', saveApiKey);
+
+                // close login panel on outside click? optional, but fine
+
+                // when editors change, maybe auto-run (but we have run button)
+                // keep manual to avoid confusion
+
+                // user can press ctrl+enter to run? optional
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        runPreview();
+                    }
+                });
+            }
+
+            // start
+            init();
+        })();
+    </script>
+</body>
+</html>
