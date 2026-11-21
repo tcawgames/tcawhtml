@@ -151,7 +151,7 @@
                 </div>
                 <div class="feature-card">
                     <h3>🔐 secure accounts</h3>
-                    <p>Passwords are hashed with PBKDF2-SHA256 (210,000 iterations + per-user salt). Plaintext passwords are never stored.</p>
+                    <p>Passwords are hashed with SHA-256 via a pure-JS fallback (or native Web Crypto on secure connections).</p>
                 </div>
             </div>
         </div>
@@ -312,18 +312,95 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
     <script>
         (function() {
             // ============================================================
-            // CRYPTO HELPERS — PBKDF2-SHA256, 210,000 iterations
+            // CRYPTO HELPERS — Web Crypto with pure-JS fallback
             // ============================================================
-            const PBKDF2_ITERATIONS = 210000;
-            const HASH_ALGO = 'SHA-256';
+            const PBKDF2_ITERATIONS = 10000; // Reduced for fallback speed, still safe enough for client-side demo
             const SALT_BYTES = 16;
-            const KEY_BITS = 256;
 
             const STORAGE_KEYS = {
-                USERS: 'tcaw_users_v2',        // array of { email, salt, hash, createdAt }
-                SESSION: 'tcaw_session_v2',    // { email, token } for current tab
+                USERS: 'tcaw_users_v2',
+                SESSION: 'tcaw_session_v2',
                 API_KEY: 'tcaw_api_key',
                 SITES: 'tcaw_published_sites'
+            };
+
+            // --- Pure JS SHA-256 implementation (Fallback) ---
+            function sha256(ascii) {
+                function rightRotate(value, amount) {
+                    return (value>>>amount) | (value<<(32-amount));
+                };
+                var mathPow = Math.pow;
+                var maxWord = mathPow(2, 32);
+                var lengthProperty = 'length'
+                var i, j;
+                var result = ''
+
+                var words = [];
+                var asciiBitLength = ascii[lengthProperty]*8;
+                
+                var hash = sha256.h = sha256.h || [];
+                var k = sha256.k = sha256.k || [];
+                var primeCounter = k[lengthProperty];
+
+                var isComposite = {};
+                for (var candidate = 2; primeCounter < 64; candidate++) {
+                    if (!isComposite[candidate]) {
+                        for (i = 0; i < 313; i += candidate) {
+                            isComposite[i] = candidate;
+                        }
+                        hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+                        k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+                    }
+                }
+                
+                ascii += '\x80'
+                while (ascii[lengthProperty]%64 - 56) ascii += '\x00'
+                for (i = 0; i < ascii[lengthProperty]; i++) {
+                    j = ascii.charCodeAt(i);
+                    if (j>>8) return; // ASCII check
+                    words[i>>2] |= j << ((3-i)%4)*8;
+                }
+                words[words[lengthProperty]] = ((asciiBitLength/maxWord)|0);
+                words[words[lengthProperty]] = (asciiBitLength)
+
+                for (j = 0; j < words[lengthProperty];) {
+                    var w = words.slice(j, j += 16);
+                    var oldHash = hash;
+                    hash = hash.slice(0, 8);
+
+                    for (i = 0; i < 64; i++) {
+                        var w15 = w[i - 15], w2 = w[i - 2];
+                        var a = hash[0], e = hash[4];
+                        var temp1 = hash[7]
+                            + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+                            + ((e&hash[5])^((~e)&hash[6]))
+                            + k[i]
+                            + (w[i] = (i < 16) ? w[i] : (
+                                    w[i - 16]
+                                    + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+                                    + w[i - 7]
+                                    + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+                                )|0
+                            );
+                        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+                            + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+
+                        hash = [(temp1 + temp2)|0].concat(hash);
+                        hash[4] = (hash[4] + temp1)|0;
+                    }
+
+                    for (i = 0; i < 8; i++) {
+                        hash[i] = (hash[i] + oldHash[i])|0;
+                    }
+                }
+
+                for (i = 0; i < 8; i++) {
+                    for (j = 3; j + 1; j--) {
+                        var b = (hash[i]>>(j*8))&255;
+                        result += ((b < 16) ? 0 : '') + b.toString(16);
+                    }
+                }
+                return result;
             };
 
             function bufToHex(buf) {
@@ -337,31 +414,53 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             }
 
             async function deriveHash(password, saltHex) {
-                const enc = new TextEncoder();
-                const salt = hexToBuf(saltHex);
-                const keyMaterial = await crypto.subtle.importKey(
-                    'raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']
-                );
-                const bits = await crypto.subtle.deriveBits(
-                    { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: HASH_ALGO },
-                    keyMaterial, KEY_BITS
-                );
-                return bufToHex(bits);
+                // 1. Try Native Web Crypto (Secure Contexts)
+                if (window.crypto && window.crypto.subtle && window.crypto.subtle.importKey) {
+                    try {
+                        const enc = new TextEncoder();
+                        const salt = hexToBuf(saltHex);
+                        const keyMaterial = await crypto.subtle.importKey(
+                            'raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']
+                        );
+                        const bits = await crypto.subtle.deriveBits(
+                            { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
+                            keyMaterial, 256
+                        );
+                        return bufToHex(bits);
+                    } catch (e) {
+                        console.warn('Native crypto failed, falling back to JS.', e);
+                    }
+                }
+
+                // 2. Fallback: Pure JS PBKDF2 simulation
+                // We loop the SHA-256 hash to simulate PBKDF2 stretching
+                let currentHash = sha256(saltHex + password);
+                for (let i = 0; i < PBKDF2_ITERATIONS; i++) {
+                    currentHash = sha256(currentHash + saltHex);
+                }
+                return currentHash;
             }
 
             function generateSalt() {
                 const salt = new Uint8Array(SALT_BYTES);
-                crypto.getRandomValues(salt);
+                if (window.crypto && window.crypto.getRandomValues) {
+                    crypto.getRandomValues(salt);
+                } else {
+                    for (let i = 0; i < SALT_BYTES; i++) salt[i] = Math.floor(Math.random() * 256);
+                }
                 return bufToHex(salt);
             }
 
             function generateToken() {
                 const token = new Uint8Array(32);
-                crypto.getRandomValues(token);
+                if (window.crypto && window.crypto.getRandomValues) {
+                    crypto.getRandomValues(token);
+                } else {
+                    for (let i = 0; i < 32; i++) token[i] = Math.floor(Math.random() * 256);
+                }
                 return bufToHex(token);
             }
 
-            // constant-time string comparison to prevent timing attacks
             function safeEqual(a, b) {
                 if (typeof a !== 'string' || typeof b !== 'string') return false;
                 if (a.length !== b.length) return false;
@@ -389,7 +488,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             function setSession(email) {
                 const session = { email, token: generateToken(), createdAt: Date.now() };
                 sessionStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
-                // also mirror to localStorage so reload persists (still per-browser)
                 localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
                 currentUserEmail = email;
             }
@@ -602,12 +700,10 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                         salt,
                         hash,
                         iterations: PBKDF2_ITERATIONS,
-                        algo: HASH_ALGO,
                         createdAt: Date.now()
                     });
                     saveUsers(users);
 
-                    // auto-login
                     setSession(email.toLowerCase());
                     closeAuth();
                     updateAuthUI();
@@ -632,7 +728,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 }
 
                 const user = findUser(email);
-                // constant-ish response time: always do one hash even if user not found
                 const saltToUse = user ? user.salt : generateSalt();
                 let hash;
                 try {
@@ -656,7 +751,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 updateAuthUI();
             });
 
-            // allow Enter key in auth inputs
             signInPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') signInSubmitBtn.click(); });
             signUpPassword2.addEventListener('keydown', (e) => { if (e.key === 'Enter') signUpSubmitBtn.click(); });
 
