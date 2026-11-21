@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tcawhtml · neon code playground</title>
-    <!-- favicon & logo (same as requested) -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png">
     <style>
-        /* ----- GLOBAL RESET & DARK + NEON GREEN THEME ----- */
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +22,6 @@
             padding: 1rem;
         }
 
-        /* neon glow & borders */
         .neon-border {
             border: 1px solid #0f0;
             box-shadow: 0 0 8px #0f0, 0 0 2px #0f0 inset;
@@ -35,7 +32,7 @@
             text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
         }
 
-        /* header / logo area */
+        /* HEADER */
         .header {
             display: flex;
             align-items: center;
@@ -57,6 +54,38 @@
             color: #0f0;
             text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
             margin-right: auto;
+            cursor: pointer;
+        }
+
+        .nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: #0f1a0f;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 0.45rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 0 4px #0f0;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn:hover {
+            background: #1f3f1f;
+            box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset;
+        }
+
+        .nav-btn.active {
+            background: #0f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 16px #0f0;
         }
 
         .account-badge {
@@ -79,29 +108,7 @@
             color: #9f9;
         }
 
-        /* main layout: editor left, tools right */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 1rem;
-            flex: 1;
-        }
-
-        /* ----- CODE EDITOR SECTION ----- */
-        .editor-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            min-height: 500px;
-        }
-
-        .editor-toolbar {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
+        /* generic btn */
         .btn {
             background: #0f1a0f;
             color: #0f0;
@@ -137,7 +144,114 @@
             box-shadow: 0 0 20px #0f0;
         }
 
-        /* three code panes (html, css, js) */
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+        }
+
+        /* ----- PAGE CONTAINERS ----- */
+        .page {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* ---------- HOME PAGE ---------- */
+        .home-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 1rem;
+            gap: 1.5rem;
+        }
+
+        .home-hero h1 {
+            font-size: 3rem;
+            color: #0f0;
+            text-shadow: 0 0 20px #0f0, 0 0 40px #0f0;
+            letter-spacing: 4px;
+        }
+
+        .home-hero p {
+            max-width: 600px;
+            color: #9f9;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .home-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .big-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 40px;
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .feature-card {
+            background: #0d140d;
+            border: 1px solid #0f0;
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 0 14px #0f04;
+        }
+
+        .feature-card h3 {
+            color: #0f0;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 8px #0f0;
+        }
+
+        .feature-card p {
+            font-size: 0.8rem;
+            color: #9f9;
+            line-height: 1.5;
+        }
+
+        /* ---------- CREATE PAGE ---------- */
+        .create-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            min-height: 500px;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
         .code-panes {
             display: flex;
             flex-direction: column;
@@ -193,7 +307,6 @@
             box-shadow: 0 0 0 1px #0f0 inset;
         }
 
-        /* preview iframe */
         .preview-box {
             background: #050805;
             border-radius: 8px;
@@ -225,7 +338,7 @@
             border: none;
         }
 
-        /* ----- RIGHT SIDEBAR: AI shortcuts + uploads ----- */
+        /* ---------- SIDEBAR (create page) ---------- */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -281,12 +394,6 @@
             transform: translateX(4px);
         }
 
-        .ai-link img {
-            width: 18px;
-            height: 18px;
-            filter: drop-shadow(0 0 4px #0f0);
-        }
-
         .ai-icon-placeholder {
             display: inline-block;
             width: 18px;
@@ -317,97 +424,196 @@
             color: #0f04;
         }
 
-        .small-btn {
-            background: #0f1a0f;
-            border: 1px solid #0f0;
-            color: #0f0;
-            border-radius: 20px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-
-        /* upload area */
-        .upload-row {
+        /* ---------- EXPLORE PAGE ---------- */
+        .explore-header {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .file-input-wrapper {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .file-input-wrapper input[type="file"] {
-            background: #0a0f0a;
-            border: 1px dashed #0f0;
-            border-radius: 20px;
-            padding: 0.4rem;
+        .explore-header h2 {
             color: #0f0;
-            font-size: 0.7rem;
-            width: 100%;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #0f0;
+            letter-spacing: 2px;
         }
 
-        /* profile / login modal style (inline simplified) */
-        .login-area {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .email-input {
+        .search-box {
             background: #0a0f0a;
             border: 1px solid #0f0;
             border-radius: 30px;
             padding: 0.5rem 1rem;
             color: #0f0;
             font-size: 0.85rem;
-            width: 100%;
             outline: none;
+            min-width: 220px;
+            box-shadow: 0 0 6px #0f0;
         }
 
-        /* games list */
-        .games-list {
+        .search-box::placeholder {
+            color: #0f06;
+        }
+
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .explore-card {
+            background: #0d140d;
+            border: 1px solid #0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 0 14px #0f04;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            max-height: 160px;
-            overflow-y: auto;
+            gap: 0.6rem;
+            transition: 0.15s;
         }
 
-        .game-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #0a120a;
-            padding: 0.4rem 0.8rem;
-            border-radius: 30px;
-            border-left: 3px solid #0f0;
-            font-size: 0.8rem;
+        .explore-card:hover {
+            box-shadow: 0 0 24px #0f08;
+            transform: translateY(-2px);
         }
 
-        .game-item a {
+        .explore-card h3 {
             color: #0f0;
-            text-decoration: none;
-            font-weight: bold;
-            text-shadow: 0 0 5px #0f0;
+            font-size: 1rem;
+            text-shadow: 0 0 6px #0f0;
+            word-break: break-word;
         }
 
-        .game-item a:hover {
-            text-decoration: underline;
+        .explore-card .meta {
+            font-size: 0.7rem;
+            color: #6f9f6f;
+        }
+
+        .explore-card .desc {
+            font-size: 0.8rem;
+            color: #9f9;
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .explore-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6f9f6f;
+            font-size: 0.9rem;
+            grid-column: 1 / -1;
+        }
+
+        /* ---------- MODAL ---------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000c;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #0d140d;
+            border: 1px solid #0f0;
+            border-radius: 16px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 30px #0f0, 0 0 10px #0f0 inset;
+        }
+
+        .modal h2 {
+            color: #0f0;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 8px #0f0;
+            text-align: center;
+        }
+
+        .modal p {
+            font-size: 0.8rem;
+            color: #9f9;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .modal-input {
+            background: #0a0f0a;
+            border: 1px solid #0f0;
+            border-radius: 30px;
+            padding: 0.6rem 1rem;
+            color: #0f0;
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-input::placeholder {
+            color: #0f04;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .otp-box {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .otp-digit {
+            width: 48px;
+            height: 56px;
+            background: #0a0f0a;
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            color: #0f0;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            outline: none;
+            box-shadow: 0 0 6px #0f05;
+        }
+
+        .otp-digit:focus {
+            box-shadow: 0 0 14px #0f0;
+            background: #0f160f;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         /* utility */
-        .mt-2 { margin-top: 0.8rem; }
         .text-dim { color: #6f9f6f; }
+        .mt-2 { margin-top: 0.8rem; }
         .flex { display: flex; }
         .gap-2 { gap: 0.5rem; }
         .flex-wrap { flex-wrap: wrap; }
-        .hidden { display: none; }
 
-        /* scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             background: #0a0a0a;
@@ -417,51 +623,92 @@
             border-radius: 10px;
             box-shadow: 0 0 8px #0f0;
         }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 900px) {
+            .create-grid {
+                grid-template-columns: 1fr;
+            }
+            .site-title {
+                font-size: 1.4rem;
+            }
+            .home-hero h1 {
+                font-size: 2rem;
+            }
+            .big-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- HEADER -->
     <div class="header">
-        <img class="logo-img" src="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png" alt="tcawhtml logo">
-        <div class="site-title">tcawhtml</div>
+        <img class="logo-img" src="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png" alt="tcawhtml logo" id="logoHome">
+        <div class="site-title" id="titleHome">tcawhtml</div>
+        <div class="nav">
+            <button class="nav-btn active" data-page="home">🏠 home</button>
+            <button class="nav-btn" data-page="create">✏️ create</button>
+            <button class="nav-btn" data-page="explore">🔍 explore</button>
+        </div>
         <div class="account-badge" id="accountBadge">
             <span class="account-email" id="displayEmail">not logged in</span>
-            <button class="btn" id="loginToggleBtn" style="padding: 0.2rem 1rem;">login</button>
+            <button class="btn btn-small" id="loginToggleBtn" style="padding: 0.2rem 1rem;">sign in</button>
         </div>
     </div>
 
-    <!-- LOGIN / EMAIL OVERLAY (simple modal, visible when toggled) -->
-    <div id="loginPanel" class="card hidden" style="position: fixed; top: 80px; right: 20px; width: 280px; z-index: 1000;">
-        <div class="card-title">📧 email login</div>
-        <div class="login-area">
-            <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" value="">
-            <button class="btn btn-primary" id="doLoginBtn">login / create</button>
-            <p class="text-dim" style="font-size:0.65rem;">no password, just email. stored in localStorage.</p>
-        </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-grid">
-        <!-- LEFT: EDITOR -->
-        <div class="editor-section">
-            <div class="editor-toolbar">
-                <button class="btn btn-primary" id="runBtn">▶ RUN</button>
-                <button class="btn" id="resetBtn">⟲ RESET</button>
-                <button class="btn" id="saveSiteBtn">💾 save to profile</button>
-                <span style="margin-left:auto; font-size:0.75rem; color:#0f0;">live preview →</span>
+    <!-- ==================== HOME PAGE ==================== -->
+    <div class="page active" id="page-home">
+        <div class="home-hero">
+            <h1>tcawhtml</h1>
+            <p>A neon-green playground to write HTML, CSS &amp; JS in your browser. Sign in with your email, build sites and games, then share them with the community on Explore.</p>
+            <div class="home-actions">
+                <button class="btn btn-primary big-btn" id="homeCreateBtn">✏️ start creating</button>
+                <button class="btn big-btn" id="homeExploreBtn">🔍 explore sites</button>
             </div>
-            <div class="code-panes">
-                <!-- HTML -->
-                <div class="code-pane">
-                    <div class="pane-header"><span>HTML</span><span>index.html</span></div>
-                    <textarea id="htmlEditor" class="code-editor" spellcheck="false" placeholder="<h1>Hello neon</h1>"><h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>
-<p>live playground</p></textarea>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <h3>⚡ live editor</h3>
+                    <p>Write HTML, CSS and JS in a neon-themed editor and see your creation come alive instantly in the preview.</p>
                 </div>
-                <!-- CSS -->
-                <div class="code-pane">
-                    <div class="pane-header"><span>CSS</span><span>style.css</span></div>
-                    <textarea id="cssEditor" class="code-editor" spellcheck="false" placeholder="body { background: #0a0; }">body {
+                <div class="feature-card">
+                    <h3>🤖 AI shortcuts</h3>
+                    <p>Quick links to Gemini, Claude, ChatGPT, DeepSeek and Grok right inside the create page.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📤 publish &amp; explore</h3>
+                    <p>Save your site to your profile, then browse and play everyone else's creations on the Explore page.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔐 email-only sign in</h3>
+                    <p>No passwords stored. We use a one-time code sent to your email (simulated here) — perfect for an open-source GitHub Pages build.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CREATE PAGE ==================== -->
+    <div class="page" id="page-create">
+        <div class="create-grid">
+            <!-- EDITOR -->
+            <div class="editor-section">
+                <div class="editor-toolbar">
+                    <button class="btn btn-primary" id="runBtn">▶ RUN</button>
+                    <button class="btn" id="resetBtn">⟲ RESET</button>
+                    <button class="btn" id="saveSiteBtn">💾 publish to profile</button>
+                    <span style="margin-left:auto; font-size:0.75rem; color:#0f0;">live preview →</span>
+                </div>
+                <div class="code-panes">
+                    <div class="code-pane">
+                        <div class="pane-header"><span>HTML</span><span>index.html</span></div>
+                        <textarea id="htmlEditor" class="code-editor" spellcheck="false" placeholder="<h1>Hello neon</h1>"><h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>
+<p>live playground</p></textarea>
+                    </div>
+                    <div class="code-pane">
+                        <div class="pane-header"><span>CSS</span><span>style.css</span></div>
+                        <textarea id="cssEditor" class="code-editor" spellcheck="false" placeholder="body { background: #0a0; }">body {
     background: #0a0f0a;
     color: #0f0;
     font-family: monospace;
@@ -473,81 +720,146 @@
     margin: 0;
 }
 h1 { text-shadow: 0 0 20px #0f0; }</textarea>
-                </div>
-                <!-- JS -->
-                <div class="code-pane">
-                    <div class="pane-header"><span>JS</span><span>script.js</span></div>
-                    <textarea id="jsEditor" class="code-editor" spellcheck="false" placeholder="console.log('neon')">console.log('tcawhtml ready');</textarea>
-                </div>
-            </div>
-            <!-- PREVIEW -->
-            <div class="preview-box">
-                <div class="preview-label">PREVIEW</div>
-                <iframe id="previewFrame" title="live preview"></iframe>
-            </div>
-        </div>
-
-        <!-- RIGHT SIDEBAR -->
-        <div class="sidebar">
-            <!-- AI SHORTCUTS -->
-            <div class="card">
-                <div class="card-title">🤖 AI ASSISTANTS</div>
-                <div class="ai-grid">
-                    <a href="https://gemini.google.com" target="_blank" class="ai-link">
-                        <span class="ai-icon-placeholder">✦</span> Gemini
-                    </a>
-                    <a href="https://claude.ai" target="_blank" class="ai-link">
-                        <span class="ai-icon-placeholder">⌬</span> Claude
-                    </a>
-                    <a href="https://chat.openai.com" target="_blank" class="ai-link">
-                        <span class="ai-icon-placeholder">◍</span> ChatGPT
-                    </a>
-                    <a href="https://chat.deepseek.com" target="_blank" class="ai-link">
-                        <span class="ai-icon-placeholder">⌁</span> DeepSeek
-                    </a>
-                    <a href="https://grok.com" target="_blank" class="ai-link">
-                        <span class="ai-icon-placeholder">⚡</span> Grok
-                    </a>
-                </div>
-                <!-- API key quick set (no backend, just client) -->
-                <div class="api-key-row">
-                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="API key (optional)">
-                    <button class="small-btn" id="saveApiKeyBtn">set</button>
-                </div>
-                <p style="font-size:0.6rem; margin-top:4px; color:#6f9f6f;">keys stored locally</p>
-            </div>
-
-            <!-- USER PROFILE / UPLOAD -->
-            <div class="card">
-                <div class="card-title">👤 PROFILE & UPLOADS</div>
-                <div id="profileSection">
-                    <div id="loggedOutMsg" class="text-dim" style="font-size:0.8rem;">Login with email to enable uploads.</div>
-                    <div id="loggedInMsg" class="hidden">
-                        <div style="font-size:0.8rem; margin-bottom:6px;">📧 <span id="profileEmail"></span></div>
-                        <div class="upload-row">
-                            <div class="file-input-wrapper">
-                                <input type="file" id="gameFileInput" accept=".html,.htm,.js,.css,.zip,.rar">
-                                <button class="small-btn" id="uploadGameBtn">upload</button>
-                            </div>
-                            <p style="font-size:0.6rem;">upload HTML game / site (stored locally)</p>
-                        </div>
+                    </div>
+                    <div class="code-pane">
+                        <div class="pane-header"><span>JS</span><span>script.js</span></div>
+                        <textarea id="jsEditor" class="code-editor" spellcheck="false" placeholder="console.log('neon')">console.log('tcawhtml ready');</textarea>
                     </div>
                 </div>
-                <!-- GAMES LIST -->
-                <div class="mt-2">
-                    <div style="font-size:0.75rem; color:#0f0; margin-bottom:4px;">🎮 UPLOADED GAMES</div>
-                    <div id="gamesContainer" class="games-list">
-                        <div class="text-dim" style="font-size:0.7rem;">no games yet</div>
+                <div class="preview-box">
+                    <div class="preview-label">PREVIEW</div>
+                    <iframe id="previewFrame" title="live preview"></iframe>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-title">🤖 AI ASSISTANTS</div>
+                    <div class="ai-grid">
+                        <a href="https://gemini.google.com" target="_blank" class="ai-link">
+                            <span class="ai-icon-placeholder">✦</span> Gemini
+                        </a>
+                        <a href="https://claude.ai" target="_blank" class="ai-link">
+                            <span class="ai-icon-placeholder">⌬</span> Claude
+                        </a>
+                        <a href="https://chat.openai.com" target="_blank" class="ai-link">
+                            <span class="ai-icon-placeholder">◍</span> ChatGPT
+                        </a>
+                        <a href="https://chat.deepseek.com" target="_blank" class="ai-link">
+                            <span class="ai-icon-placeholder">⌁</span> DeepSeek
+                        </a>
+                        <a href="https://grok.com" target="_blank" class="ai-link">
+                            <span class="ai-icon-placeholder">⚡</span> Grok
+                        </a>
+                    </div>
+                    <div class="api-key-row">
+                        <input type="password" id="apiKeyInput" class="api-key-input" placeholder="API key (optional)">
+                        <button class="btn btn-small" id="saveApiKeyBtn">set</button>
+                    </div>
+                    <p style="font-size:0.6rem; margin-top:4px; color:#6f9f6f;">keys stored locally</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">👤 YOUR PROFILE</div>
+                    <div id="createLoggedOutMsg" class="text-dim" style="font-size:0.8rem;">Sign in with email to publish sites to your profile.</div>
+                    <div id="createLoggedInMsg" class="hidden">
+                        <div style="font-size:0.8rem; margin-bottom:6px;">📧 <span id="createProfileEmail"></span></div>
+                        <p class="text-dim" style="font-size:0.7rem;">Publish your site and it'll appear on Explore for everyone.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- script -->
+    <!-- ==================== EXPLORE PAGE ==================== -->
+    <div class="page" id="page-explore">
+        <div class="explore-header">
+            <h2>🔍 explore community sites</h2>
+            <input type="text" class="search-box" id="exploreSearch" placeholder="search sites...">
+        </div>
+        <div class="explore-grid" id="exploreGrid">
+            <div class="empty-state">no sites published yet — be the first!</div>
+        </div>
+    </div>
+
+    <!-- ==================== SIGN IN MODAL (email + OTP) ==================== -->
+    <div class="modal-overlay" id="signInModal">
+        <div class="modal">
+            <!-- Step 1: email -->
+            <div id="signInStepEmail">
+                <h2>🔐 sign in with email</h2>
+                <p>Enter your email and we'll "send" you a 6-digit one-time code. No passwords are ever stored — only your email address is saved in your browser so you stay signed in.</p>
+                <input type="email" id="signInEmailInput" class="modal-input" placeholder="you@example.com">
+                <div class="modal-actions">
+                    <button class="btn btn-small" id="signInCancelBtn1">cancel</button>
+                    <button class="btn btn-primary btn-small" id="sendCodeBtn">send code</button>
+                </div>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div id="signInStepOtp" class="hidden">
+                <h2>📧 check your email</h2>
+                <p>We "sent" a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below to sign in. <span class="text-dim">(demo: the code is shown in a console-style alert)</span></p>
+                <div class="otp-box" id="otpBox">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="0" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="1" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="2" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="3" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="4" inputmode="numeric">
+                    <input type="text" maxlength="1" class="otp-digit" data-idx="5" inputmode="numeric">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-small" id="signInCancelBtn2">cancel</button>
+                    <button class="btn btn-primary btn-small" id="verifyCodeBtn">verify &amp; sign in</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function() {
-            // ----- DOM refs -----
+            // ========== STATE ==========
+            const STORAGE_KEYS = {
+                USER: 'tcaw_user_email',
+                API_KEY: 'tcaw_api_key',
+                SITES: 'tcaw_published_sites'
+            };
+
+            let currentUserEmail = localStorage.getItem(STORAGE_KEYS.USER) || null;
+            let publishedSites = [];
+            let pendingOtp = null; // { email, code, expires }
+            let currentPage = 'home';
+
+            // ========== DOM REFS ==========
+            const pages = {
+                home: document.getElementById('page-home'),
+                create: document.getElementById('page-create'),
+                explore: document.getElementById('page-explore')
+            };
+            const navBtns = document.querySelectorAll('.nav-btn');
+
+            // home
+            const homeCreateBtn = document.getElementById('homeCreateBtn');
+            const homeExploreBtn = document.getElementById('homeExploreBtn');
+            const logoHome = document.getElementById('logoHome');
+            const titleHome = document.getElementById('titleHome');
+
+            // auth
+            const displayEmail = document.getElementById('displayEmail');
+            const loginToggleBtn = document.getElementById('loginToggleBtn');
+            const signInModal = document.getElementById('signInModal');
+            const signInStepEmail = document.getElementById('signInStepEmail');
+            const signInStepOtp = document.getElementById('signInStepOtp');
+            const signInEmailInput = document.getElementById('signInEmailInput');
+            const sendCodeBtn = document.getElementById('sendCodeBtn');
+            const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+            const signInCancelBtn1 = document.getElementById('signInCancelBtn1');
+            const signInCancelBtn2 = document.getElementById('signInCancelBtn2');
+            const otpEmailDisplay = document.getElementById('otpEmailDisplay');
+            const otpInputs = document.querySelectorAll('.otp-digit');
+
+            // create page
             const htmlEditor = document.getElementById('htmlEditor');
             const cssEditor = document.getElementById('cssEditor');
             const jsEditor = document.getElementById('jsEditor');
@@ -555,89 +867,225 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             const runBtn = document.getElementById('runBtn');
             const resetBtn = document.getElementById('resetBtn');
             const saveSiteBtn = document.getElementById('saveSiteBtn');
-            const loginToggleBtn = document.getElementById('loginToggleBtn');
-            const loginPanel = document.getElementById('loginPanel');
-            const emailInput = document.getElementById('emailInput');
-            const doLoginBtn = document.getElementById('doLoginBtn');
-            const displayEmail = document.getElementById('displayEmail');
-            const accountBadge = document.getElementById('accountBadge');
-            const loggedOutMsg = document.getElementById('loggedOutMsg');
-            const loggedInMsg = document.getElementById('loggedInMsg');
-            const profileEmail = document.getElementById('profileEmail');
-            const gameFileInput = document.getElementById('gameFileInput');
-            const uploadGameBtn = document.getElementById('uploadGameBtn');
-            const gamesContainer = document.getElementById('gamesContainer');
+            const createLoggedOutMsg = document.getElementById('createLoggedOutMsg');
+            const createLoggedInMsg = document.getElementById('createLoggedInMsg');
+            const createProfileEmail = document.getElementById('createProfileEmail');
             const apiKeyInput = document.getElementById('apiKeyInput');
             const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
 
-            // ----- state -----
-            let currentUserEmail = localStorage.getItem('tcaw_user_email') || null;
-            let uploadedGames = []; // array of { name, content, type, email }
+            // explore
+            const exploreGrid = document.getElementById('exploreGrid');
+            const exploreSearch = document.getElementById('exploreSearch');
 
-            // load games from localStorage
-            function loadGamesFromStorage() {
-                const stored = localStorage.getItem('tcaw_games');
-                if (stored) {
-                    try {
-                        uploadedGames = JSON.parse(stored);
-                    } catch (e) {
-                        uploadedGames = [];
-                    }
+            // ========== PAGE NAVIGATION ==========
+            function showPage(name) {
+                if (!pages[name]) return;
+                currentPage = name;
+                Object.values(pages).forEach(p => p.classList.remove('active'));
+                pages[name].classList.add('active');
+                navBtns.forEach(b => {
+                    b.classList.toggle('active', b.dataset.page === name);
+                });
+                if (name === 'explore') renderExplore();
+                if (name === 'create' && !previewFrame.src) runPreview();
+                window.scrollTo(0, 0);
+            }
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => showPage(btn.dataset.page));
+            });
+            homeCreateBtn.addEventListener('click', () => showPage('create'));
+            homeExploreBtn.addEventListener('click', () => showPage('explore'));
+            logoHome.addEventListener('click', () => showPage('home'));
+            titleHome.addEventListener('click', () => showPage('home'));
+
+            // ========== AUTH: email + OTP (simulated) ==========
+            function openSignIn() {
+                signInStepEmail.classList.remove('hidden');
+                signInStepOtp.classList.add('hidden');
+                signInEmailInput.value = '';
+                signInModal.classList.add('active');
+                setTimeout(() => signInEmailInput.focus(), 50);
+            }
+
+            function closeSignIn() {
+                signInModal.classList.remove('active');
+                otpInputs.forEach(i => i.value = '');
+                pendingOtp = null;
+            }
+
+            function signOut() {
+                currentUserEmail = null;
+                localStorage.removeItem(STORAGE_KEYS.USER);
+                updateAuthUI();
+            }
+
+            loginToggleBtn.addEventListener('click', () => {
+                if (currentUserEmail) {
+                    if (confirm('Sign out of ' + currentUserEmail + '?')) signOut();
                 } else {
-                    uploadedGames = [];
+                    openSignIn();
                 }
-                renderGames();
-            }
+            });
 
-            // save games to localStorage
-            function saveGamesToStorage() {
-                localStorage.setItem('tcaw_games', JSON.stringify(uploadedGames));
-            }
+            signInCancelBtn1.addEventListener('click', closeSignIn);
+            signInCancelBtn2.addEventListener('click', closeSignIn);
 
-            // render games list
-            function renderGames() {
-                if (!gamesContainer) return;
-                if (!uploadedGames.length) {
-                    gamesContainer.innerHTML = '<div class="text-dim" style="font-size:0.7rem;">no games yet</div>';
+            // Step 1: "send" code
+            sendCodeBtn.addEventListener('click', () => {
+                const email = signInEmailInput.value.trim();
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert('Please enter a valid email address.');
                     return;
                 }
-                let html = '';
-                uploadedGames.forEach((game, idx) => {
-                    html += `<div class="game-item">
-                        <span>${escapeHtml(game.name)}</span>
-                        <a href="#" data-game-index="${idx}" class="play-game-link">▶ play</a>
-                    </div>`;
-                });
-                gamesContainer.innerHTML = html;
+                // generate a 6-digit code
+                const code = String(Math.floor(100000 + Math.random() * 900000));
+                pendingOtp = { email, code, expires: Date.now() + 5 * 60 * 1000 };
 
-                // attach click handlers to play links (open in new window using blob)
-                document.querySelectorAll('.play-game-link').forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const idx = link.dataset.gameIndex;
-                        if (idx !== undefined && uploadedGames[idx]) {
-                            const game = uploadedGames[idx];
-                            const newWin = window.open();
-                            newWin.document.write(game.content);
-                            newWin.document.close();
-                        }
-                    });
+                // "send email" — demo: show in alert + console
+                otpEmailDisplay.textContent = email;
+                signInStepEmail.classList.add('hidden');
+                signInStepOtp.classList.remove('hidden');
+                otpInputs.forEach(i => i.value = '');
+                setTimeout(() => otpInputs[0].focus(), 50);
+
+                // simulate email delivery
+                console.log('%c📧 [tcawhtml demo email]', 'color:#0f0;font-weight:bold;', 'Your one-time code for ' + email + ' is: ' + code);
+                alert('📧 Demo email sent to ' + email + '\n\nYour 6-digit code is: ' + code + '\n\n(In a real deployment this would be emailed to you.)');
+            });
+
+            // OTP input auto-advance
+            otpInputs.forEach((input, idx) => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    e.target.value = val.slice(0, 1);
+                    if (val && idx < otpInputs.length - 1) {
+                        otpInputs[idx + 1].focus();
+                    }
                 });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+                        otpInputs[idx - 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        verifyCodeBtn.click();
+                    }
+                });
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                    for (let i = 0; i < otpInputs.length; i++) {
+                        if (paste[i]) otpInputs[i].value = paste[i];
+                    }
+                    otpInputs[Math.min(paste.length, otpInputs.length - 1)].focus();
+                });
+            });
+
+            // Step 2: verify code
+            verifyCodeBtn.addEventListener('click', () => {
+                if (!pendingOtp) {
+                    alert('No pending code. Please request a new one.');
+                    closeSignIn();
+                    return;
+                }
+                if (Date.now() > pendingOtp.expires) {
+                    alert('Code expired. Please request a new one.');
+                    closeSignIn();
+                    return;
+                }
+                const entered = Array.from(otpInputs).map(i => i.value).join('');
+                if (entered.length !== 6) {
+                    alert('Please enter all 6 digits.');
+                    return;
+                }
+                if (entered !== pendingOtp.code) {
+                    alert('Incorrect code. Try again.');
+                    return;
+                }
+
+                // success
+                currentUserEmail = pendingOtp.email;
+                localStorage.setItem(STORAGE_KEYS.USER, currentUserEmail);
+                closeSignIn();
+                updateAuthUI();
+                alert('✅ Signed in as ' + currentUserEmail);
+            });
+
+            function updateAuthUI() {
+                if (currentUserEmail) {
+                    displayEmail.textContent = currentUserEmail;
+                    loginToggleBtn.textContent = 'sign out';
+                    createLoggedOutMsg.classList.add('hidden');
+                    createLoggedInMsg.classList.remove('hidden');
+                    createProfileEmail.textContent = currentUserEmail;
+                } else {
+                    displayEmail.textContent = 'not logged in';
+                    loginToggleBtn.textContent = 'sign in';
+                    createLoggedOutMsg.classList.remove('hidden');
+                    createLoggedInMsg.classList.add('hidden');
+                }
+                renderExplore();
             }
 
-            // simple escape
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            // ----- preview compile & run -----
+            // ========== EDITOR / PREVIEW ==========
             function runPreview() {
                 const html = htmlEditor.value;
                 const css = cssEditor.value;
                 const js = jsEditor.value;
+                const fullDoc = `<!DOCTYPE html>
+<html>
+<head><style>${css}</style></head>
+<body>${html}
+<script>${js}<\/script>
+</body>
+</html>`;
+                const blob = new Blob([fullDoc], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                previewFrame.src = url;
+            }
 
+            function resetEditors() {
+                htmlEditor.value = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
+                cssEditor.value = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
+                jsEditor.value = `console.log('tcawhtml ready');`;
+                runPreview();
+            }
+
+            runBtn.addEventListener('click', runPreview);
+            resetBtn.addEventListener('click', resetEditors);
+
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && currentPage === 'create') {
+                    e.preventDefault();
+                    runPreview();
+                }
+            });
+
+            // ========== PUBLISH / SAVE SITE ==========
+            function loadSites() {
+                const raw = localStorage.getItem(STORAGE_KEYS.SITES);
+                if (raw) {
+                    try { publishedSites = JSON.parse(raw); } catch (e) { publishedSites = []; }
+                } else {
+                    publishedSites = [];
+                }
+            }
+
+            function saveSites() {
+                localStorage.setItem(STORAGE_KEYS.SITES, JSON.stringify(publishedSites));
+            }
+
+            function publishSite() {
+                if (!currentUserEmail) {
+                    if (confirm('You need to be signed in to publish. Sign in now?')) openSignIn();
+                    return;
+                }
+                const name = prompt('Name your site / game:', 'my-neon-site');
+                if (!name) return;
+
+                const html = htmlEditor.value;
+                const css = cssEditor.value;
+                const js = jsEditor.value;
                 const fullDoc = `<!DOCTYPE html>
 <html>
 <head><style>${css}</style></head>
@@ -646,185 +1094,153 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
 </body>
 </html>`;
 
-                const blob = new Blob([fullDoc], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                previewFrame.src = url;
-                // revoke after a while? not necessary now but we can keep track
-            }
-
-            // reset editors to initial
-            function resetEditors() {
-                htmlEditor.value = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
-                cssEditor.value = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
-                jsEditor.value = `console.log('tcawhtml ready');`;
-                runPreview();
-            }
-
-            // ----- login / account -----
-            function updateUIForUser() {
-                if (currentUserEmail) {
-                    displayEmail.textContent = currentUserEmail;
-                    loginToggleBtn.textContent = 'logout';
-                    loggedOutMsg.classList.add('hidden');
-                    loggedInMsg.classList.remove('hidden');
-                    profileEmail.textContent = currentUserEmail;
-                } else {
-                    displayEmail.textContent = 'not logged in';
-                    loginToggleBtn.textContent = 'login';
-                    loggedOutMsg.classList.remove('hidden');
-                    loggedInMsg.classList.add('hidden');
-                }
-                renderGames();
-            }
-
-            function loginWithEmail(email) {
-                if (!email || !email.includes('@')) {
-                    alert('please enter a valid email');
-                    return;
-                }
-                currentUserEmail = email;
-                localStorage.setItem('tcaw_user_email', email);
-                updateUIForUser();
-                loginPanel.classList.add('hidden');
-                emailInput.value = '';
-            }
-
-            function logout() {
-                currentUserEmail = null;
-                localStorage.removeItem('tcaw_user_email');
-                updateUIForUser();
-            }
-
-            // ----- save site to profile (store in games list as well) -----
-            function saveCurrentSite() {
-                if (!currentUserEmail) {
-                    alert('login first to save your site');
-                    return;
-                }
-                const name = prompt('give your site/game a name', 'my-neon-site');
-                if (!name) return;
-
-                const html = htmlEditor.value;
-                const css = cssEditor.value;
-                const js = jsEditor.value;
-
-                const fullContent = `<!DOCTYPE html>
-<html>
-<head><style>${css}</style></head>
-<body>${html}
-<script>${js}<\/script>
-</body>
-</html>`;
-
-                uploadedGames.push({
-                    name: name,
-                    content: fullContent,
-                    email: currentUserEmail,
-                    timestamp: Date.now()
-                });
-
-                saveGamesToStorage();
-                renderGames();
-                alert('site saved to your profile!');
-            }
-
-            // ----- upload file (read as text) -----
-            function handleFileUpload() {
-                if (!currentUserEmail) {
-                    alert('login to upload games');
-                    return;
-                }
-                const file = gameFileInput.files[0];
-                if (!file) {
-                    alert('select a file first');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const content = e.target.result;
-                    uploadedGames.push({
-                        name: file.name,
-                        content: content,
-                        email: currentUserEmail,
-                        timestamp: Date.now()
-                    });
-                    saveGamesToStorage();
-                    renderGames();
-                    alert(`"${file.name}" uploaded!`);
-                    gameFileInput.value = '';
+                const site = {
+                    id: 'site_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
+                    name: name.trim().slice(0, 60),
+                    content: fullDoc,
+                    author: currentUserEmail,
+                    createdAt: Date.now()
                 };
-                reader.readAsText(file);
+
+                publishedSites.unshift(site);
+                saveSites();
+                renderExplore();
+                alert('🚀 Published "' + site.name + '" to Explore!');
+                showPage('explore');
             }
 
-            // ----- API key store (local only) -----
+            saveSiteBtn.addEventListener('click', publishSite);
+
+            // ========== EXPLORE ==========
+            function renderExplore() {
+                if (!exploreGrid) return;
+                const query = (exploreSearch.value || '').toLowerCase().trim();
+                let list = publishedSites.slice();
+
+                if (query) {
+                    list = list.filter(s =>
+                        s.name.toLowerCase().includes(query) ||
+                        (s.author || '').toLowerCase().includes(query)
+                    );
+                }
+
+                if (!list.length) {
+                    exploreGrid.innerHTML = `<div class="empty-state">${publishedSites.length ? 'no sites match your search.' : 'no sites published yet — head to Create and publish the first one!'}</div>`;
+                    return;
+                }
+
+                exploreGrid.innerHTML = list.map(site => {
+                    const date = new Date(site.createdAt).toLocaleDateString();
+                    const isMine = currentUserEmail && site.author === currentUserEmail;
+                    return `<div class="explore-card">
+                        <h3>${escapeHtml(site.name)} ${isMine ? '⭐' : ''}</h3>
+                        <div class="meta">by ${escapeHtml(site.author)} · ${date}</div>
+                        <div class="desc">${escapeHtml(site.content.replace(/<[^>]*>/g, ' ').slice(0, 140))}…</div>
+                        <div class="explore-card-actions">
+                            <button class="btn btn-primary btn-small" data-play="${site.id}">▶ play</button>
+                            <button class="btn btn-small" data-view="${site.id}">👁 view code</button>
+                            ${isMine ? `<button class="btn btn-small" data-delete="${site.id}" style="border-color:#f55;color:#f77;box-shadow:0 0 6px #f55;">🗑 delete</button>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+
+                // wire up buttons
+                exploreGrid.querySelectorAll('[data-play]').forEach(b => {
+                    b.addEventListener('click', () => playSite(b.dataset.play));
+                });
+                exploreGrid.querySelectorAll('[data-view]').forEach(b => {
+                    b.addEventListener('click', () => viewSite(b.dataset.view));
+                });
+                exploreGrid.querySelectorAll('[data-delete]').forEach(b => {
+                    b.addEventListener('click', () => deleteSite(b.dataset.delete));
+                });
+            }
+
+            function findSite(id) {
+                return publishedSites.find(s => s.id === id);
+            }
+
+            function playSite(id) {
+                const site = findSite(id);
+                if (!site) return;
+                const w = window.open();
+                w.document.open();
+                w.document.write(site.content);
+                w.document.close();
+            }
+
+            function viewSite(id) {
+                const site = findSite(id);
+                if (!site) return;
+                // Load into editor (create page) and prompt to remix
+                if (confirm('Load "' + site.name + '" into the editor to view / remix it?')) {
+                    // split? easier: load full content into html editor and clear css/js? 
+                    // We'll parse simply: put full doc into HTML editor (works for view), clear others
+                    // Better: try to split by style/script tags
+                    const content = site.content;
+                    const styleMatch = content.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+                    const scriptMatch = content.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+                    let htmlBody = content;
+                    if (styleMatch) htmlBody = htmlBody.replace(styleMatch[0], '');
+                    if (scriptMatch) htmlBody = htmlBody.replace(scriptMatch[0], '');
+                    // strip doctype/html/head/body wrappers roughly
+                    htmlBody = htmlBody.replace(/<!DOCTYPE[^>]*>/i, '');
+                    htmlBody = htmlBody.replace(/<\/?html[^>]*>/gi, '');
+                    htmlBody = htmlBody.replace(/<\/?head[^>]*>/gi, '');
+                    htmlBody = htmlBody.replace(/<\/?body[^>]*>/gi, '');
+                    htmlEditor.value = htmlBody.trim();
+                    cssEditor.value = styleMatch ? styleMatch[1].trim() : '';
+                    jsEditor.value = scriptMatch ? scriptMatch[1].trim() : '';
+                    showPage('create');
+                    setTimeout(runPreview, 100);
+                }
+            }
+
+            function deleteSite(id) {
+                const site = findSite(id);
+                if (!site) return;
+                if (site.author !== currentUserEmail) {
+                    alert('You can only delete your own sites.');
+                    return;
+                }
+                if (!confirm('Delete "' + site.name + '"? This cannot be undone.')) return;
+                publishedSites = publishedSites.filter(s => s.id !== id);
+                saveSites();
+                renderExplore();
+            }
+
+            exploreSearch.addEventListener('input', renderExplore);
+
+            // ========== API KEY ==========
             function saveApiKey() {
                 const key = apiKeyInput.value.trim();
                 if (key) {
-                    localStorage.setItem('tcaw_api_key', key);
-                    alert('API key saved locally.');
+                    localStorage.setItem(STORAGE_KEYS.API_KEY, key);
+                    alert('API key saved locally (only on this device).');
                 } else {
-                    localStorage.removeItem('tcaw_api_key');
+                    localStorage.removeItem(STORAGE_KEYS.API_KEY);
                     alert('API key removed.');
                 }
             }
+            saveApiKeyBtn.addEventListener('click', saveApiKey);
 
-            // ----- initialisation -----
-            function init() {
-                // restore API key if any
-                const storedKey = localStorage.getItem('tcaw_api_key');
-                if (storedKey) apiKeyInput.value = storedKey;
-
-                // restore user
-                updateUIForUser();
-
-                // load games
-                loadGamesFromStorage();
-
-                // run preview initially
-                runPreview();
-
-                // ----- event listeners -----
-                runBtn.addEventListener('click', runPreview);
-
-                resetBtn.addEventListener('click', resetEditors);
-
-                saveSiteBtn.addEventListener('click', saveCurrentSite);
-
-                // login toggle button
-                loginToggleBtn.addEventListener('click', () => {
-                    if (currentUserEmail) {
-                        logout();
-                    } else {
-                        loginPanel.classList.toggle('hidden');
-                    }
-                });
-
-                // do login
-                doLoginBtn.addEventListener('click', () => {
-                    loginWithEmail(emailInput.value.trim());
-                });
-
-                // upload button
-                uploadGameBtn.addEventListener('click', handleFileUpload);
-
-                // save api key
-                saveApiKeyBtn.addEventListener('click', saveApiKey);
-
-                // close login panel on outside click? optional, but fine
-
-                // when editors change, maybe auto-run (but we have run button)
-                // keep manual to avoid confusion
-
-                // user can press ctrl+enter to run? optional
-                document.addEventListener('keydown', (e) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                        e.preventDefault();
-                        runPreview();
-                    }
-                });
+            // ========== UTIL ==========
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text == null ? '' : text;
+                return div.innerHTML;
             }
 
-            // start
+            // ========== INIT ==========
+            function init() {
+                loadSites();
+                const storedKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
+                if (storedKey) apiKeyInput.value = storedKey;
+                updateAuthUI();
+                runPreview();
+                renderExplore();
+            }
+
             init();
         })();
     </script>
