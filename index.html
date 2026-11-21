@@ -252,6 +252,42 @@
             align-items: center;
         }
 
+        /* tab bar for editor view modes */
+        .view-toggle {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: auto;
+            background: #0a120a;
+            border: 1px solid #0f0;
+            border-radius: 30px;
+            padding: 2px;
+            box-shadow: 0 0 6px #0f05;
+        }
+
+        .view-toggle button {
+            background: transparent;
+            color: #0f0;
+            border: none;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            letter-spacing: 0.5px;
+        }
+
+        .view-toggle button.active {
+            background: #0f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .view-toggle button:hover:not(.active) {
+            background: #1f3f1f;
+        }
+
+        /* split panes view */
         .code-panes {
             display: flex;
             flex-direction: column;
@@ -305,6 +341,73 @@
         .code-editor:focus {
             background: #0f160f;
             box-shadow: 0 0 0 1px #0f0 inset;
+        }
+
+        /* tabbed editor view */
+        .tabbed-editor {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            background: #0e140e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 10px #0f05;
+        }
+
+        .tabbed-editor.visible {
+            display: flex;
+        }
+
+        .code-panes.hidden {
+            display: none;
+        }
+
+        .editor-tabs {
+            display: flex;
+            background: #0a1a0a;
+            border-bottom: 1px solid #0f0;
+            overflow-x: auto;
+        }
+
+        .editor-tab {
+            background: transparent;
+            color: #0f0;
+            border: none;
+            border-right: 1px solid #0f03;
+            padding: 0.6rem 1.4rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.15s;
+            white-space: nowrap;
+        }
+
+        .editor-tab:hover {
+            background: #1f3f1f;
+        }
+
+        .editor-tab.active {
+            background: #0f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 10px #0f0 inset;
+        }
+
+        .tab-panel {
+            display: none;
+            flex: 1;
+        }
+
+        .tab-panel.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tab-panel .code-editor {
+            flex: 1;
+            min-height: 260px;
         }
 
         .preview-box {
@@ -671,7 +774,7 @@
             <div class="feature-cards">
                 <div class="feature-card">
                     <h3>⚡ live editor</h3>
-                    <p>Write HTML, CSS and JS in a neon-themed editor and see your creation come alive instantly in the preview.</p>
+                    <p>Write HTML, CSS and JS in a neon-themed editor. Switch between split view and tabs for each language.</p>
                 </div>
                 <div class="feature-card">
                     <h3>🤖 AI shortcuts</h3>
@@ -683,7 +786,7 @@
                 </div>
                 <div class="feature-card">
                     <h3>🔐 email-only sign in</h3>
-                    <p>No passwords stored. We use a one-time code sent to your email (simulated here) — perfect for an open-source GitHub Pages build.</p>
+                    <p>No passwords stored. We use a single-use, 5-minute one-time code sent to your email (simulated here).</p>
                 </div>
             </div>
         </div>
@@ -697,10 +800,16 @@
                 <div class="editor-toolbar">
                     <button class="btn btn-primary" id="runBtn">▶ RUN</button>
                     <button class="btn" id="resetBtn">⟲ RESET</button>
+                    <button class="btn" id="openPreviewBtn">↗ open preview in new tab</button>
                     <button class="btn" id="saveSiteBtn">💾 publish to profile</button>
-                    <span style="margin-left:auto; font-size:0.75rem; color:#0f0;">live preview →</span>
+                    <div class="view-toggle" id="viewToggle">
+                        <button data-view="split" class="active">split</button>
+                        <button data-view="tabs">tabs</button>
+                    </div>
                 </div>
-                <div class="code-panes">
+
+                <!-- SPLIT VIEW -->
+                <div class="code-panes" id="splitView">
                     <div class="code-pane">
                         <div class="pane-header"><span>HTML</span><span>index.html</span></div>
                         <textarea id="htmlEditor" class="code-editor" spellcheck="false" placeholder="<h1>Hello neon</h1>"><h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>
@@ -726,6 +835,37 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                         <textarea id="jsEditor" class="code-editor" spellcheck="false" placeholder="console.log('neon')">console.log('tcawhtml ready');</textarea>
                     </div>
                 </div>
+
+                <!-- TABBED VIEW -->
+                <div class="tabbed-editor" id="tabbedView">
+                    <div class="editor-tabs" id="editorTabs">
+                        <button class="editor-tab active" data-tab="html">HTML</button>
+                        <button class="editor-tab" data-tab="css">CSS</button>
+                        <button class="editor-tab" data-tab="js">JS</button>
+                    </div>
+                    <div class="tab-panel active" data-panel="html">
+                        <textarea id="htmlEditorTab" class="code-editor" spellcheck="false"><h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>
+<p>live playground</p></textarea>
+                    </div>
+                    <div class="tab-panel" data-panel="css">
+                        <textarea id="cssEditorTab" class="code-editor" spellcheck="false">body {
+    background: #0a0f0a;
+    color: #0f0;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+h1 { text-shadow: 0 0 20px #0f0; }</textarea>
+                    </div>
+                    <div class="tab-panel" data-panel="js">
+                        <textarea id="jsEditorTab" class="code-editor" spellcheck="false">console.log('tcawhtml ready');</textarea>
+                    </div>
+                </div>
+
                 <div class="preview-box">
                     <div class="preview-label">PREVIEW</div>
                     <iframe id="previewFrame" title="live preview"></iframe>
@@ -783,13 +923,12 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
         </div>
     </div>
 
-    <!-- ==================== SIGN IN MODAL (email + OTP) ==================== -->
+    <!-- ==================== SIGN IN MODAL ==================== -->
     <div class="modal-overlay" id="signInModal">
         <div class="modal">
-            <!-- Step 1: email -->
             <div id="signInStepEmail">
                 <h2>🔐 sign in with email</h2>
-                <p>Enter your email and we'll "send" you a 6-digit one-time code. No passwords are ever stored — only your email address is saved in your browser so you stay signed in.</p>
+                <p>Enter your email and we'll "send" you a 6-digit one-time code. Codes expire after 5 minutes and can only be used once. No passwords are ever stored.</p>
                 <input type="email" id="signInEmailInput" class="modal-input" placeholder="you@example.com">
                 <div class="modal-actions">
                     <button class="btn btn-small" id="signInCancelBtn1">cancel</button>
@@ -797,10 +936,9 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 </div>
             </div>
 
-            <!-- Step 2: OTP -->
             <div id="signInStepOtp" class="hidden">
                 <h2>📧 check your email</h2>
-                <p>We "sent" a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below to sign in. <span class="text-dim">(demo: the code is shown in a console-style alert)</span></p>
+                <p>We "sent" a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below. <span class="text-dim">(demo: code is shown in an alert)</span></p>
                 <div class="otp-box" id="otpBox">
                     <input type="text" maxlength="1" class="otp-digit" data-idx="0" inputmode="numeric">
                     <input type="text" maxlength="1" class="otp-digit" data-idx="1" inputmode="numeric">
@@ -828,8 +966,10 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
 
             let currentUserEmail = localStorage.getItem(STORAGE_KEYS.USER) || null;
             let publishedSites = [];
-            let pendingOtp = null; // { email, code, expires }
+            let pendingOtp = null;
+            let otpSendCooldown = 0;
             let currentPage = 'home';
+            let currentView = 'split'; // 'split' or 'tabs'
 
             // ========== DOM REFS ==========
             const pages = {
@@ -859,19 +999,33 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             const otpEmailDisplay = document.getElementById('otpEmailDisplay');
             const otpInputs = document.querySelectorAll('.otp-digit');
 
-            // create page
+            // editors — split view
             const htmlEditor = document.getElementById('htmlEditor');
             const cssEditor = document.getElementById('cssEditor');
             const jsEditor = document.getElementById('jsEditor');
+
+            // editors — tab view
+            const htmlEditorTab = document.getElementById('htmlEditorTab');
+            const cssEditorTab = document.getElementById('cssEditorTab');
+            const jsEditorTab = document.getElementById('jsEditorTab');
+
             const previewFrame = document.getElementById('previewFrame');
             const runBtn = document.getElementById('runBtn');
             const resetBtn = document.getElementById('resetBtn');
+            const openPreviewBtn = document.getElementById('openPreviewBtn');
             const saveSiteBtn = document.getElementById('saveSiteBtn');
             const createLoggedOutMsg = document.getElementById('createLoggedOutMsg');
             const createLoggedInMsg = document.getElementById('createLoggedInMsg');
             const createProfileEmail = document.getElementById('createProfileEmail');
             const apiKeyInput = document.getElementById('apiKeyInput');
             const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+
+            // view toggles
+            const viewToggle = document.getElementById('viewToggle');
+            const splitView = document.getElementById('splitView');
+            const tabbedView = document.getElementById('tabbedView');
+            const editorTabs = document.querySelectorAll('.editor-tab');
+            const tabPanels = document.querySelectorAll('.tab-panel');
 
             // explore
             const exploreGrid = document.getElementById('exploreGrid');
@@ -899,7 +1053,68 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             logoHome.addEventListener('click', () => showPage('home'));
             titleHome.addEventListener('click', () => showPage('home'));
 
-            // ========== AUTH: email + OTP (simulated) ==========
+            // ========== EDITOR SYNC BETWEEN VIEWS ==========
+            // Keep split and tab editors in sync so switching never loses work.
+            function syncFromSplitToTabs() {
+                htmlEditorTab.value = htmlEditor.value;
+                cssEditorTab.value = cssEditor.value;
+                jsEditorTab.value = jsEditor.value;
+            }
+            function syncFromTabsToSplit() {
+                htmlEditor.value = htmlEditorTab.value;
+                cssEditor.value = cssEditorTab.value;
+                jsEditor.value = jsEditorTab.value;
+            }
+
+            // live sync while typing (cheap, textareas are small)
+            htmlEditor.addEventListener('input', () => { htmlEditorTab.value = htmlEditor.value; });
+            cssEditor.addEventListener('input', () => { cssEditorTab.value = cssEditor.value; });
+            jsEditor.addEventListener('input', () => { jsEditorTab.value = jsEditor.value; });
+            htmlEditorTab.addEventListener('input', () => { htmlEditor.value = htmlEditorTab.value; });
+            cssEditorTab.addEventListener('input', () => { cssEditor.value = cssEditorTab.value; });
+            jsEditorTab.addEventListener('input', () => { jsEditor.value = jsEditorTab.value; });
+
+            // ========== VIEW TOGGLE (split / tabs) ==========
+            function setView(view) {
+                currentView = view;
+                viewToggle.querySelectorAll('button').forEach(b => {
+                    b.classList.toggle('active', b.dataset.view === view);
+                });
+                if (view === 'split') {
+                    syncFromTabsToSplit();
+                    splitView.classList.remove('hidden');
+                    tabbedView.classList.remove('visible');
+                } else {
+                    syncFromSplitToTabs();
+                    splitView.classList.add('hidden');
+                    tabbedView.classList.add('visible');
+                }
+            }
+
+            viewToggle.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => setView(btn.dataset.view));
+            });
+
+            // tab switching inside tabbed view
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    editorTabs.forEach(t => t.classList.toggle('active', t === tab));
+                    tabPanels.forEach(p => {
+                        p.classList.toggle('active', p.dataset.panel === target);
+                    });
+                });
+            });
+
+            // ========== AUTH: single-use OTP ==========
+            const OTP_TTL_MS = 5 * 60 * 1000;
+
+            function generateOtpCode() {
+                const arr = new Uint32Array(1);
+                crypto.getRandomValues(arr);
+                return String(arr[0] % 1000000).padStart(6, '0');
+            }
+
             function openSignIn() {
                 signInStepEmail.classList.remove('hidden');
                 signInStepOtp.classList.add('hidden');
@@ -911,10 +1126,17 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             function closeSignIn() {
                 signInModal.classList.remove('active');
                 otpInputs.forEach(i => i.value = '');
+                if (pendingOtp && !pendingOtp.used) {
+                    pendingOtp.used = true;
+                }
                 pendingOtp = null;
             }
 
             function signOut() {
+                if (pendingOtp) {
+                    pendingOtp.used = true;
+                    pendingOtp = null;
+                }
                 currentUserEmail = null;
                 localStorage.removeItem(STORAGE_KEYS.USER);
                 updateAuthUI();
@@ -931,45 +1153,53 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             signInCancelBtn1.addEventListener('click', closeSignIn);
             signInCancelBtn2.addEventListener('click', closeSignIn);
 
-            // Step 1: "send" code
-            sendCodeBtn.addEventListener('click', () => {
+            sendCodeBtn.addEventListener('click', async () => {
                 const email = signInEmailInput.value.trim();
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                     alert('Please enter a valid email address.');
                     return;
                 }
-                // generate a 6-digit code
-                const code = String(Math.floor(100000 + Math.random() * 900000));
-                pendingOtp = { email, code, expires: Date.now() + 5 * 60 * 1000 };
+                if (Date.now() < otpSendCooldown) {
+                    const wait = Math.ceil((otpSendCooldown - Date.now()) / 1000);
+                    alert('Please wait ' + wait + 's before requesting another code.');
+                    return;
+                }
 
-                // "send email" — demo: show in alert + console
+                const code = generateOtpCode();
+                pendingOtp = {
+                    email,
+                    code,
+                    expires: Date.now() + OTP_TTL_MS,
+                    used: false,
+                    attempts: 0
+                };
+                otpSendCooldown = Date.now() + 20000;
+
+                // ---- Replace below with EmailJS ----
+                // emailjs.init("YOUR_PUBLIC_KEY");
+                // await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                //     to_email: email, otp_code: code, expires_minutes: 5
+                // });
+                console.log('%c📧 [tcawhtml demo email]', 'color:#0f0;font-weight:bold;', 'Code for ' + email + ' = ' + code);
+                alert('📧 Demo email sent to ' + email + '\n\nYour one-time code is: ' + code +
+                      '\n\nThis code expires in 5 minutes and can only be used ONCE.');
+
                 otpEmailDisplay.textContent = email;
                 signInStepEmail.classList.add('hidden');
                 signInStepOtp.classList.remove('hidden');
                 otpInputs.forEach(i => i.value = '');
                 setTimeout(() => otpInputs[0].focus(), 50);
-
-                // simulate email delivery
-                console.log('%c📧 [tcawhtml demo email]', 'color:#0f0;font-weight:bold;', 'Your one-time code for ' + email + ' is: ' + code);
-                alert('📧 Demo email sent to ' + email + '\n\nYour 6-digit code is: ' + code + '\n\n(In a real deployment this would be emailed to you.)');
             });
 
-            // OTP input auto-advance
             otpInputs.forEach((input, idx) => {
                 input.addEventListener('input', (e) => {
                     const val = e.target.value.replace(/\D/g, '');
                     e.target.value = val.slice(0, 1);
-                    if (val && idx < otpInputs.length - 1) {
-                        otpInputs[idx + 1].focus();
-                    }
+                    if (val && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
                 });
                 input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && !e.target.value && idx > 0) {
-                        otpInputs[idx - 1].focus();
-                    }
-                    if (e.key === 'Enter') {
-                        verifyCodeBtn.click();
-                    }
+                    if (e.key === 'Backspace' && !e.target.value && idx > 0) otpInputs[idx - 1].focus();
+                    if (e.key === 'Enter') verifyCodeBtn.click();
                 });
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
@@ -981,30 +1211,53 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 });
             });
 
-            // Step 2: verify code
             verifyCodeBtn.addEventListener('click', () => {
                 if (!pendingOtp) {
                     alert('No pending code. Please request a new one.');
                     closeSignIn();
                     return;
                 }
-                if (Date.now() > pendingOtp.expires) {
-                    alert('Code expired. Please request a new one.');
+                if (pendingOtp.used) {
+                    alert('This code has already been used. Please request a new one.');
+                    pendingOtp = null;
                     closeSignIn();
                     return;
                 }
+                if (Date.now() > pendingOtp.expires) {
+                    pendingOtp.used = true;
+                    pendingOtp = null;
+                    alert('This code has expired. Please request a new one.');
+                    closeSignIn();
+                    return;
+                }
+
                 const entered = Array.from(otpInputs).map(i => i.value).join('');
                 if (entered.length !== 6) {
                     alert('Please enter all 6 digits.');
                     return;
                 }
+
                 if (entered !== pendingOtp.code) {
-                    alert('Incorrect code. Try again.');
+                    pendingOtp.attempts++;
+                    if (pendingOtp.attempts >= 5) {
+                        pendingOtp.used = true;
+                        pendingOtp = null;
+                        alert('Too many incorrect attempts. Code invalidated. Please request a new one.');
+                        closeSignIn();
+                    } else {
+                        alert('Incorrect code. You have ' + (5 - pendingOtp.attempts) + ' attempt(s) left.');
+                        otpInputs.forEach(i => i.value = '');
+                        otpInputs[0].focus();
+                    }
                     return;
                 }
 
-                // success
-                currentUserEmail = pendingOtp.email;
+                // success — burn code immediately
+                pendingOtp.used = true;
+                pendingOtp = null;
+                otpInputs.forEach(i => i.value = '');
+
+                currentUserEmail = signInEmailInput.value.trim();
                 localStorage.setItem(STORAGE_KEYS.USER, currentUserEmail);
                 closeSignIn();
                 updateAuthUI();
@@ -1028,31 +1281,48 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             }
 
             // ========== EDITOR / PREVIEW ==========
-            function runPreview() {
+            function buildFullDoc() {
                 const html = htmlEditor.value;
                 const css = cssEditor.value;
                 const js = jsEditor.value;
-                const fullDoc = `<!DOCTYPE html>
+                return `<!DOCTYPE html>
 <html>
 <head><style>${css}</style></head>
 <body>${html}
 <script>${js}<\/script>
 </body>
 </html>`;
-                const blob = new Blob([fullDoc], { type: 'text/html' });
+            }
+
+            function runPreview() {
+                const blob = new Blob([buildFullDoc()], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 previewFrame.src = url;
             }
 
+            function openPreviewInNewTab() {
+                const blob = new Blob([buildFullDoc()], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+            }
+
             function resetEditors() {
-                htmlEditor.value = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
-                cssEditor.value = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
-                jsEditor.value = `console.log('tcawhtml ready');`;
+                const defaultHtml = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
+                const defaultCss = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
+                const defaultJs = `console.log('tcawhtml ready');`;
+
+                htmlEditor.value = defaultHtml;
+                cssEditor.value = defaultCss;
+                jsEditor.value = defaultJs;
+                htmlEditorTab.value = defaultHtml;
+                cssEditorTab.value = defaultCss;
+                jsEditorTab.value = defaultJs;
                 runPreview();
             }
 
             runBtn.addEventListener('click', runPreview);
             resetBtn.addEventListener('click', resetEditors);
+            openPreviewBtn.addEventListener('click', openPreviewInNewTab);
 
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && currentPage === 'create') {
@@ -1083,21 +1353,10 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 const name = prompt('Name your site / game:', 'my-neon-site');
                 if (!name) return;
 
-                const html = htmlEditor.value;
-                const css = cssEditor.value;
-                const js = jsEditor.value;
-                const fullDoc = `<!DOCTYPE html>
-<html>
-<head><style>${css}</style></head>
-<body>${html}
-<script>${js}<\/script>
-</body>
-</html>`;
-
                 const site = {
                     id: 'site_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
                     name: name.trim().slice(0, 60),
-                    content: fullDoc,
+                    content: buildFullDoc(),
                     author: currentUserEmail,
                     createdAt: Date.now()
                 };
@@ -1144,7 +1403,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                     </div>`;
                 }).join('');
 
-                // wire up buttons
                 exploreGrid.querySelectorAll('[data-play]').forEach(b => {
                     b.addEventListener('click', () => playSite(b.dataset.play));
                 });
@@ -1172,25 +1430,29 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             function viewSite(id) {
                 const site = findSite(id);
                 if (!site) return;
-                // Load into editor (create page) and prompt to remix
                 if (confirm('Load "' + site.name + '" into the editor to view / remix it?')) {
-                    // split? easier: load full content into html editor and clear css/js? 
-                    // We'll parse simply: put full doc into HTML editor (works for view), clear others
-                    // Better: try to split by style/script tags
                     const content = site.content;
                     const styleMatch = content.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
                     const scriptMatch = content.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
                     let htmlBody = content;
                     if (styleMatch) htmlBody = htmlBody.replace(styleMatch[0], '');
                     if (scriptMatch) htmlBody = htmlBody.replace(scriptMatch[0], '');
-                    // strip doctype/html/head/body wrappers roughly
                     htmlBody = htmlBody.replace(/<!DOCTYPE[^>]*>/i, '');
                     htmlBody = htmlBody.replace(/<\/?html[^>]*>/gi, '');
                     htmlBody = htmlBody.replace(/<\/?head[^>]*>/gi, '');
                     htmlBody = htmlBody.replace(/<\/?body[^>]*>/gi, '');
-                    htmlEditor.value = htmlBody.trim();
-                    cssEditor.value = styleMatch ? styleMatch[1].trim() : '';
-                    jsEditor.value = scriptMatch ? scriptMatch[1].trim() : '';
+
+                    const finalHtml = htmlBody.trim();
+                    const finalCss = styleMatch ? styleMatch[1].trim() : '';
+                    const finalJs = scriptMatch ? scriptMatch[1].trim() : '';
+
+                    htmlEditor.value = finalHtml;
+                    cssEditor.value = finalCss;
+                    jsEditor.value = finalJs;
+                    htmlEditorTab.value = finalHtml;
+                    cssEditorTab.value = finalCss;
+                    jsEditorTab.value = finalJs;
+
                     showPage('create');
                     setTimeout(runPreview, 100);
                 }
@@ -1237,6 +1499,8 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 const storedKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
                 if (storedKey) apiKeyInput.value = storedKey;
                 updateAuthUI();
+                // ensure editors start in sync
+                syncFromSplitToTabs();
                 runPreview();
                 renderExplore();
             }
