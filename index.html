@@ -6,748 +6,113 @@
     <title>tcawhtml · neon code playground</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Fira Code', 'Courier New', monospace;
-        }
-
-        body {
-            background-color: #0a0c0a;
-            color: #c0ffc0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-
-        .neon-border {
-            border: 1px solid #0f0;
-            box-shadow: 0 0 8px #0f0, 0 0 2px #0f0 inset;
-            border-radius: 8px;
-        }
-
-        .neon-text {
-            text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
-        }
-
-        /* HEADER */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .logo-img {
-            width: 48px;
-            height: 48px;
-            filter: drop-shadow(0 0 8px #0f0);
-        }
-
-        .site-title {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #0f0;
-            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-            margin-right: auto;
-            cursor: pointer;
-        }
-
-        .nav {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: #0f1a0f;
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 0.45rem 1rem;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 0 4px #0f0;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-btn:hover {
-            background: #1f3f1f;
-            box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset;
-        }
-
-        .nav-btn.active {
-            background: #0f0;
-            color: #0a0a0a;
-            box-shadow: 0 0 16px #0f0;
-        }
-
-        .account-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: #0a1a0a;
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 6px #0f0;
-        }
-
-        .account-email {
-            font-size: 0.9rem;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: #9f9;
-        }
-
-        /* generic btn */
-        .btn {
-            background: #0f1a0f;
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 0 4px #0f0;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            background: #1f3f1f;
-            box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset;
-            transform: scale(1.02);
-        }
-
-        .btn-primary {
-            background: #0f0;
-            color: #0a0a0a;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 12px #0f0;
-        }
-
-        .btn-primary:hover {
-            background: #5f5;
-            box-shadow: 0 0 20px #0f0;
-        }
-
-        .btn-small {
-            padding: 0.3rem 0.8rem;
-            font-size: 0.7rem;
-        }
-
-        /* ----- PAGE CONTAINERS ----- */
-        .page {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .page.active {
-            display: flex;
-        }
-
-        /* ---------- HOME PAGE ---------- */
-        .home-hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 3rem 1rem;
-            gap: 1.5rem;
-        }
-
-        .home-hero h1 {
-            font-size: 3rem;
-            color: #0f0;
-            text-shadow: 0 0 20px #0f0, 0 0 40px #0f0;
-            letter-spacing: 4px;
-        }
-
-        .home-hero p {
-            max-width: 600px;
-            color: #9f9;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .home-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-
-        .big-btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            border-radius: 40px;
-        }
-
-        .feature-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .feature-card {
-            background: #0d140d;
-            border: 1px solid #0f0;
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 0 14px #0f04;
-        }
-
-        .feature-card h3 {
-            color: #0f0;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 8px #0f0;
-        }
-
-        .feature-card p {
-            font-size: 0.8rem;
-            color: #9f9;
-            line-height: 1.5;
-        }
-
-        /* ---------- CREATE PAGE ---------- */
-        .create-grid {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 1rem;
-            flex: 1;
-        }
-
-        .editor-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            min-height: 500px;
-        }
-
-        .editor-toolbar {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        /* tab bar for editor view modes */
-        .view-toggle {
-            display: flex;
-            gap: 0.3rem;
-            margin-left: auto;
-            background: #0a120a;
-            border: 1px solid #0f0;
-            border-radius: 30px;
-            padding: 2px;
-            box-shadow: 0 0 6px #0f05;
-        }
-
-        .view-toggle button {
-            background: transparent;
-            color: #0f0;
-            border: none;
-            padding: 0.3rem 0.9rem;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-            letter-spacing: 0.5px;
-        }
-
-        .view-toggle button.active {
-            background: #0f0;
-            color: #0a0a0a;
-            box-shadow: 0 0 10px #0f0;
-        }
-
-        .view-toggle button:hover:not(.active) {
-            background: #1f3f1f;
-        }
-
-        /* split panes view */
-        .code-panes {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            flex: 1;
-        }
-
-        .code-pane {
-            display: flex;
-            flex-direction: column;
-            background: #0e140e;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 10px #0f05;
-        }
-
-        .pane-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.4rem 0.8rem;
-            background: #0a1a0a;
-            border-bottom: 1px solid #0f0;
-            color: #0f0;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .pane-header span {
-            text-shadow: 0 0 5px #0f0;
-        }
-
-        .code-editor {
-            width: 100%;
-            background: #0a0f0a;
-            color: #b0ffb0;
-            border: none;
-            padding: 0.8rem;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            outline: none;
-            line-height: 1.5;
-            min-height: 120px;
-            border: 0;
-        }
-
-        .code-editor:focus {
-            background: #0f160f;
-            box-shadow: 0 0 0 1px #0f0 inset;
-        }
-
-        /* tabbed editor view */
-        .tabbed-editor {
-            display: none;
-            flex-direction: column;
-            flex: 1;
-            background: #0e140e;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 10px #0f05;
-        }
-
-        .tabbed-editor.visible {
-            display: flex;
-        }
-
-        .code-panes.hidden {
-            display: none;
-        }
-
-        .editor-tabs {
-            display: flex;
-            background: #0a1a0a;
-            border-bottom: 1px solid #0f0;
-            overflow-x: auto;
-        }
-
-        .editor-tab {
-            background: transparent;
-            color: #0f0;
-            border: none;
-            border-right: 1px solid #0f03;
-            padding: 0.6rem 1.4rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.15s;
-            white-space: nowrap;
-        }
-
-        .editor-tab:hover {
-            background: #1f3f1f;
-        }
-
-        .editor-tab.active {
-            background: #0f0;
-            color: #0a0a0a;
-            box-shadow: 0 0 10px #0f0 inset;
-        }
-
-        .tab-panel {
-            display: none;
-            flex: 1;
-        }
-
-        .tab-panel.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tab-panel .code-editor {
-            flex: 1;
-            min-height: 260px;
-        }
-
-        .preview-box {
-            background: #050805;
-            border-radius: 8px;
-            border: 2px solid #0f0;
-            box-shadow: 0 0 16px #0f08;
-            height: 220px;
-            overflow: hidden;
-            position: relative;
-            margin-top: 0.5rem;
-        }
-
-        .preview-label {
-            position: absolute;
-            top: 4px;
-            right: 8px;
-            font-size: 0.65rem;
-            color: #0f0;
-            background: #000c;
-            padding: 2px 6px;
-            border-radius: 12px;
-            z-index: 5;
-            border: 1px solid #0f0;
-        }
-
-        iframe#previewFrame {
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            border: none;
-        }
-
-        /* ---------- SIDEBAR (create page) ---------- */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .card {
-            background: #0d140d;
-            border: 1px solid #0f0;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 0 14px #0f04;
-        }
-
-        .card-title {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #0f0;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid #0f04;
-            padding-bottom: 0.4rem;
-        }
-
-        .ai-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .ai-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: #0a120a;
-            padding: 0.6rem 0.8rem;
-            border-radius: 40px;
-            border: 1px solid #0f0;
-            color: #c0ffc0;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: 0.15s;
-            box-shadow: 0 0 4px #0f0;
-        }
-
-        .ai-link:hover {
-            background: #1a2a1a;
-            box-shadow: 0 0 12px #0f0;
-            transform: translateX(4px);
-        }
-
-        .ai-icon-placeholder {
-            display: inline-block;
-            width: 18px;
-            text-align: center;
-            font-weight: bold;
-            color: #0f0;
-            font-size: 1.1rem;
-        }
-
-        .api-key-row {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
-
-        .api-key-input {
-            flex: 1;
-            background: #0a0f0a;
-            border: 1px solid #0f0;
-            color: #0f0;
-            padding: 0.3rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            outline: none;
-        }
-
-        .api-key-input::placeholder {
-            color: #0f04;
-        }
-
-        /* ---------- EXPLORE PAGE ---------- */
-        .explore-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .explore-header h2 {
-            color: #0f0;
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px #0f0;
-            letter-spacing: 2px;
-        }
-
-        .search-box {
-            background: #0a0f0a;
-            border: 1px solid #0f0;
-            border-radius: 30px;
-            padding: 0.5rem 1rem;
-            color: #0f0;
-            font-size: 0.85rem;
-            outline: none;
-            min-width: 220px;
-            box-shadow: 0 0 6px #0f0;
-        }
-
-        .search-box::placeholder {
-            color: #0f06;
-        }
-
-        .explore-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1rem;
-        }
-
-        .explore-card {
-            background: #0d140d;
-            border: 1px solid #0f0;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 0 14px #0f04;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            transition: 0.15s;
-        }
-
-        .explore-card:hover {
-            box-shadow: 0 0 24px #0f08;
-            transform: translateY(-2px);
-        }
-
-        .explore-card h3 {
-            color: #0f0;
-            font-size: 1rem;
-            text-shadow: 0 0 6px #0f0;
-            word-break: break-word;
-        }
-
-        .explore-card .meta {
-            font-size: 0.7rem;
-            color: #6f9f6f;
-        }
-
-        .explore-card .desc {
-            font-size: 0.8rem;
-            color: #9f9;
-            line-height: 1.4;
-            max-height: 60px;
-            overflow: hidden;
-        }
-
-        .explore-card-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: auto;
-            flex-wrap: wrap;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #6f9f6f;
-            font-size: 0.9rem;
-            grid-column: 1 / -1;
-        }
-
-        /* ---------- MODAL ---------- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: #000c;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 1rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: #0d140d;
-            border: 1px solid #0f0;
-            border-radius: 16px;
-            padding: 1.5rem;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 0 30px #0f0, 0 0 10px #0f0 inset;
-        }
-
-        .modal h2 {
-            color: #0f0;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 8px #0f0;
-            text-align: center;
-        }
-
-        .modal p {
-            font-size: 0.8rem;
-            color: #9f9;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .modal-input {
-            background: #0a0f0a;
-            border: 1px solid #0f0;
-            border-radius: 30px;
-            padding: 0.6rem 1rem;
-            color: #0f0;
-            font-size: 0.9rem;
-            width: 100%;
-            outline: none;
-            margin-bottom: 0.8rem;
-        }
-
-        .modal-input::placeholder {
-            color: #0f04;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: flex-end;
-        }
-
-        .otp-box {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .otp-digit {
-            width: 48px;
-            height: 56px;
-            background: #0a0f0a;
-            border: 1px solid #0f0;
-            border-radius: 8px;
-            color: #0f0;
-            font-size: 1.5rem;
-            text-align: center;
-            font-weight: bold;
-            outline: none;
-            box-shadow: 0 0 6px #0f05;
-        }
-
-        .otp-digit:focus {
-            box-shadow: 0 0 14px #0f0;
-            background: #0f160f;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* utility */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fira Code', 'Courier New', monospace; }
+        body { background-color: #0a0c0a; color: #c0ffc0; display: flex; flex-direction: column; min-height: 100vh; padding: 1rem; }
+        .neon-border { border: 1px solid #0f0; box-shadow: 0 0 8px #0f0, 0 0 2px #0f0 inset; border-radius: 8px; }
+        .neon-text { text-shadow: 0 0 5px #0f0, 0 0 10px #0f0; }
+        .header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .logo-img { width: 48px; height: 48px; filter: drop-shadow(0 0 8px #0f0); }
+        .site-title { font-size: 2rem; font-weight: 600; letter-spacing: 2px; color: #0f0; text-shadow: 0 0 10px #0f0, 0 0 20px #0f0; margin-right: auto; cursor: pointer; }
+        .nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .nav-btn { background: #0f1a0f; color: #0f0; border: 1px solid #0f0; padding: 0.45rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; box-shadow: 0 0 4px #0f0; letter-spacing: 0.5px; }
+        .nav-btn:hover { background: #1f3f1f; box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset; }
+        .nav-btn.active { background: #0f0; color: #0a0a0a; box-shadow: 0 0 16px #0f0; }
+        .account-badge { display: flex; align-items: center; gap: 0.75rem; background: #0a1a0a; padding: 0.4rem 1rem; border-radius: 40px; border: 1px solid #0f0; box-shadow: 0 0 6px #0f0; }
+        .account-email { font-size: 0.9rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #9f9; }
+        .btn { background: #0f1a0f; color: #0f0; border: 1px solid #0f0; padding: 0.5rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; box-shadow: 0 0 4px #0f0; display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+        .btn:hover { background: #1f3f1f; box-shadow: 0 0 12px #0f0, 0 0 4px #0f0 inset; transform: scale(1.02); }
+        .btn-primary { background: #0f0; color: #0a0a0a; border: 1px solid #0f0; box-shadow: 0 0 12px #0f0; }
+        .btn-primary:hover { background: #5f5; box-shadow: 0 0 20px #0f0; }
+        .btn-small { padding: 0.3rem 0.8rem; font-size: 0.7rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .page { display: none; flex: 1; flex-direction: column; gap: 1rem; }
+        .page.active { display: flex; }
+        .home-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1rem; gap: 1.5rem; }
+        .home-hero h1 { font-size: 3rem; color: #0f0; text-shadow: 0 0 20px #0f0, 0 0 40px #0f0; letter-spacing: 4px; }
+        .home-hero p { max-width: 600px; color: #9f9; font-size: 1rem; line-height: 1.6; }
+        .home-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+        .big-btn { padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 40px; }
+        .feature-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; width: 100%; max-width: 900px; }
+        .feature-card { background: #0d140d; border: 1px solid #0f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 0 14px #0f04; }
+        .feature-card h3 { color: #0f0; font-size: 1rem; margin-bottom: 0.5rem; text-shadow: 0 0 8px #0f0; }
+        .feature-card p { font-size: 0.8rem; color: #9f9; line-height: 1.5; }
+        .create-grid { display: grid; grid-template-columns: 1fr 340px; gap: 1rem; flex: 1; }
+        .editor-section { display: flex; flex-direction: column; gap: 0.8rem; min-height: 500px; }
+        .editor-toolbar { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+        .view-toggle { display: flex; gap: 0.3rem; margin-left: auto; background: #0a120a; border: 1px solid #0f0; border-radius: 30px; padding: 2px; box-shadow: 0 0 6px #0f05; }
+        .view-toggle button { background: transparent; color: #0f0; border: none; padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: 0.15s; letter-spacing: 0.5px; }
+        .view-toggle button.active { background: #0f0; color: #0a0a0a; box-shadow: 0 0 10px #0f0; }
+        .view-toggle button:hover:not(.active) { background: #1f3f1f; }
+        .code-panes { display: flex; flex-direction: column; gap: 0.8rem; flex: 1; }
+        .code-pane { display: flex; flex-direction: column; background: #0e140e; border-radius: 8px; overflow: hidden; border: 1px solid #0f0; box-shadow: 0 0 10px #0f05; }
+        .pane-header { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.8rem; background: #0a1a0a; border-bottom: 1px solid #0f0; color: #0f0; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .pane-header span { text-shadow: 0 0 5px #0f0; }
+        .code-editor { width: 100%; background: #0a0f0a; color: #b0ffb0; border: none; padding: 0.8rem; font-family: 'Fira Code', 'Courier New', monospace; font-size: 0.9rem; resize: vertical; outline: none; line-height: 1.5; min-height: 120px; border: 0; }
+        .code-editor:focus { background: #0f160f; box-shadow: 0 0 0 1px #0f0 inset; }
+        .tabbed-editor { display: none; flex-direction: column; flex: 1; background: #0e140e; border-radius: 8px; overflow: hidden; border: 1px solid #0f0; box-shadow: 0 0 10px #0f05; }
+        .tabbed-editor.visible { display: flex; }
+        .code-panes.hidden { display: none; }
+        .editor-tabs { display: flex; background: #0a1a0a; border-bottom: 1px solid #0f0; overflow-x: auto; }
+        .editor-tab { background: transparent; color: #0f0; border: none; border-right: 1px solid #0f03; padding: 0.6rem 1.4rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.15s; white-space: nowrap; }
+        .editor-tab:hover { background: #1f3f1f; }
+        .editor-tab.active { background: #0f0; color: #0a0a0a; box-shadow: 0 0 10px #0f0 inset; }
+        .tab-panel { display: none; flex: 1; }
+        .tab-panel.active { display: flex; flex-direction: column; }
+        .tab-panel .code-editor { flex: 1; min-height: 260px; }
+        .preview-box { background: #050805; border-radius: 8px; border: 2px solid #0f0; box-shadow: 0 0 16px #0f08; height: 220px; overflow: hidden; position: relative; margin-top: 0.5rem; }
+        .preview-label { position: absolute; top: 4px; right: 8px; font-size: 0.65rem; color: #0f0; background: #000c; padding: 2px 6px; border-radius: 12px; z-index: 5; border: 1px solid #0f0; }
+        iframe#previewFrame { width: 100%; height: 100%; background: #fff; border: none; }
+        .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .card { background: #0d140d; border: 1px solid #0f0; border-radius: 12px; padding: 1rem; box-shadow: 0 0 14px #0f04; }
+        .card-title { font-size: 0.9rem; font-weight: bold; color: #0f0; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #0f04; padding-bottom: 0.4rem; }
+        .ai-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+        .ai-link { display: flex; align-items: center; gap: 0.75rem; background: #0a120a; padding: 0.6rem 0.8rem; border-radius: 40px; border: 1px solid #0f0; color: #c0ffc0; text-decoration: none; font-size: 0.85rem; transition: 0.15s; box-shadow: 0 0 4px #0f0; }
+        .ai-link:hover { background: #1a2a1a; box-shadow: 0 0 12px #0f0; transform: translateX(4px); }
+        .ai-icon-placeholder { display: inline-block; width: 18px; text-align: center; font-weight: bold; color: #0f0; font-size: 1.1rem; }
+        .api-key-row { display: flex; gap: 4px; margin-top: 8px; }
+        .api-key-input { flex: 1; background: #0a0f0a; border: 1px solid #0f0; color: #0f0; padding: 0.3rem 0.6rem; border-radius: 20px; font-size: 0.75rem; outline: none; }
+        .api-key-input::placeholder { color: #0f04; }
+        .explore-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .explore-header h2 { color: #0f0; font-size: 1.5rem; text-shadow: 0 0 10px #0f0; letter-spacing: 2px; }
+        .search-box { background: #0a0f0a; border: 1px solid #0f0; border-radius: 30px; padding: 0.5rem 1rem; color: #0f0; font-size: 0.85rem; outline: none; min-width: 220px; box-shadow: 0 0 6px #0f0; }
+        .search-box::placeholder { color: #0f06; }
+        .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+        .explore-card { background: #0d140d; border: 1px solid #0f0; border-radius: 12px; padding: 1rem; box-shadow: 0 0 14px #0f04; display: flex; flex-direction: column; gap: 0.6rem; transition: 0.15s; }
+        .explore-card:hover { box-shadow: 0 0 24px #0f08; transform: translateY(-2px); }
+        .explore-card h3 { color: #0f0; font-size: 1rem; text-shadow: 0 0 6px #0f0; word-break: break-word; }
+        .explore-card .meta { font-size: 0.7rem; color: #6f9f6f; }
+        .explore-card .desc { font-size: 0.8rem; color: #9f9; line-height: 1.4; max-height: 60px; overflow: hidden; }
+        .explore-card-actions { display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap; }
+        .empty-state { text-align: center; padding: 3rem; color: #6f9f6f; font-size: 0.9rem; grid-column: 1 / -1; }
+        .modal-overlay { position: fixed; inset: 0; background: #000c; display: none; align-items: center; justify-content: center; z-index: 2000; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #0d140d; border: 1px solid #0f0; border-radius: 16px; padding: 1.5rem; width: 100%; max-width: 400px; box-shadow: 0 0 30px #0f0, 0 0 10px #0f0 inset; }
+        .modal h2 { color: #0f0; font-size: 1.2rem; margin-bottom: 1rem; text-shadow: 0 0 8px #0f0; text-align: center; }
+        .modal p { font-size: 0.8rem; color: #9f9; line-height: 1.5; margin-bottom: 1rem; }
+        .modal-input { background: #0a0f0a; border: 1px solid #0f0; border-radius: 30px; padding: 0.6rem 1rem; color: #0f0; font-size: 0.9rem; width: 100%; outline: none; margin-bottom: 0.8rem; }
+        .modal-input::placeholder { color: #0f04; }
+        .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+        .modal-tabs { display: flex; margin-bottom: 1rem; border-bottom: 1px solid #0f04; }
+        .modal-tab { flex: 1; background: transparent; color: #0f0; border: none; padding: 0.5rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-tab.active { background: #0f0; color: #0a0a0a; border-radius: 30px 30px 0 0; }
+        .strength-bar { height: 4px; background: #1a1a1a; border-radius: 4px; margin: -0.4rem 0 0.8rem; overflow: hidden; }
+        .strength-fill { height: 100%; width: 0%; transition: 0.2s; }
+        .strength-text { font-size: 0.65rem; margin-top: 0.2rem; margin-bottom: 0.6rem; text-align: right; }
+        .hidden { display: none !important; }
         .text-dim { color: #6f9f6f; }
         .mt-2 { margin-top: 0.8rem; }
-        .flex { display: flex; }
-        .gap-2 { gap: 0.5rem; }
-        .flex-wrap { flex-wrap: wrap; }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0f0;
-            border-radius: 10px;
-            box-shadow: 0 0 8px #0f0;
-        }
-
-        /* ---------- RESPONSIVE ---------- */
+        ::-webkit-scrollbar { width: 6px; background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #0f0; border-radius: 10px; box-shadow: 0 0 8px #0f0; }
         @media (max-width: 900px) {
-            .create-grid {
-                grid-template-columns: 1fr;
-            }
-            .site-title {
-                font-size: 1.4rem;
-            }
-            .home-hero h1 {
-                font-size: 2rem;
-            }
-            .big-btn {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.95rem;
-            }
+            .create-grid { grid-template-columns: 1fr; }
+            .site-title { font-size: 1.4rem; }
+            .home-hero h1 { font-size: 2rem; }
+            .big-btn { padding: 0.8rem 1.5rem; font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <div class="header">
         <img class="logo-img" src="https://i.ibb.co/Y7B5K9VX/Neon-Command-Prompt-Icon.png" alt="tcawhtml logo" id="logoHome">
         <div class="site-title" id="titleHome">tcawhtml</div>
@@ -756,17 +121,17 @@
             <button class="nav-btn" data-page="create">✏️ create</button>
             <button class="nav-btn" data-page="explore">🔍 explore</button>
         </div>
-        <div class="account-badge" id="accountBadge">
+        <div class="account-badge">
             <span class="account-email" id="displayEmail">not logged in</span>
             <button class="btn btn-small" id="loginToggleBtn" style="padding: 0.2rem 1rem;">sign in</button>
         </div>
     </div>
 
-    <!-- ==================== HOME PAGE ==================== -->
+    <!-- HOME -->
     <div class="page active" id="page-home">
         <div class="home-hero">
             <h1>tcawhtml</h1>
-            <p>A neon-green playground to write HTML, CSS &amp; JS in your browser. Sign in with your email, build sites and games, then share them with the community on Explore.</p>
+            <p>A neon-green playground to write HTML, CSS &amp; JS in your browser. Create an account, build sites and games, then share them with the community on Explore.</p>
             <div class="home-actions">
                 <button class="btn btn-primary big-btn" id="homeCreateBtn">✏️ start creating</button>
                 <button class="btn big-btn" id="homeExploreBtn">🔍 explore sites</button>
@@ -785,17 +150,16 @@
                     <p>Save your site to your profile, then browse and play everyone else's creations on the Explore page.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>🔐 email-only sign in</h3>
-                    <p>No passwords stored. We use a single-use, 5-minute one-time code sent to your email (simulated here).</p>
+                    <h3>🔐 secure accounts</h3>
+                    <p>Passwords are hashed with PBKDF2-SHA256 (210,000 iterations + per-user salt). Plaintext passwords are never stored.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== CREATE PAGE ==================== -->
+    <!-- CREATE -->
     <div class="page" id="page-create">
         <div class="create-grid">
-            <!-- EDITOR -->
             <div class="editor-section">
                 <div class="editor-toolbar">
                     <button class="btn btn-primary" id="runBtn">▶ RUN</button>
@@ -808,7 +172,6 @@
                     </div>
                 </div>
 
-                <!-- SPLIT VIEW -->
                 <div class="code-panes" id="splitView">
                     <div class="code-pane">
                         <div class="pane-header"><span>HTML</span><span>index.html</span></div>
@@ -836,7 +199,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                     </div>
                 </div>
 
-                <!-- TABBED VIEW -->
                 <div class="tabbed-editor" id="tabbedView">
                     <div class="editor-tabs" id="editorTabs">
                         <button class="editor-tab active" data-tab="html">HTML</button>
@@ -872,26 +234,15 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 </div>
             </div>
 
-            <!-- SIDEBAR -->
             <div class="sidebar">
                 <div class="card">
                     <div class="card-title">🤖 AI ASSISTANTS</div>
                     <div class="ai-grid">
-                        <a href="https://gemini.google.com" target="_blank" class="ai-link">
-                            <span class="ai-icon-placeholder">✦</span> Gemini
-                        </a>
-                        <a href="https://claude.ai" target="_blank" class="ai-link">
-                            <span class="ai-icon-placeholder">⌬</span> Claude
-                        </a>
-                        <a href="https://chat.openai.com" target="_blank" class="ai-link">
-                            <span class="ai-icon-placeholder">◍</span> ChatGPT
-                        </a>
-                        <a href="https://chat.deepseek.com" target="_blank" class="ai-link">
-                            <span class="ai-icon-placeholder">⌁</span> DeepSeek
-                        </a>
-                        <a href="https://grok.com" target="_blank" class="ai-link">
-                            <span class="ai-icon-placeholder">⚡</span> Grok
-                        </a>
+                        <a href="https://gemini.google.com" target="_blank" class="ai-link"><span class="ai-icon-placeholder">✦</span> Gemini</a>
+                        <a href="https://claude.ai" target="_blank" class="ai-link"><span class="ai-icon-placeholder">⌬</span> Claude</a>
+                        <a href="https://chat.openai.com" target="_blank" class="ai-link"><span class="ai-icon-placeholder">◍</span> ChatGPT</a>
+                        <a href="https://chat.deepseek.com" target="_blank" class="ai-link"><span class="ai-icon-placeholder">⌁</span> DeepSeek</a>
+                        <a href="https://grok.com" target="_blank" class="ai-link"><span class="ai-icon-placeholder">⚡</span> Grok</a>
                     </div>
                     <div class="api-key-row">
                         <input type="password" id="apiKeyInput" class="api-key-input" placeholder="API key (optional)">
@@ -902,7 +253,7 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
 
                 <div class="card">
                     <div class="card-title">👤 YOUR PROFILE</div>
-                    <div id="createLoggedOutMsg" class="text-dim" style="font-size:0.8rem;">Sign in with email to publish sites to your profile.</div>
+                    <div id="createLoggedOutMsg" class="text-dim" style="font-size:0.8rem;">Sign in to publish sites to your profile.</div>
                     <div id="createLoggedInMsg" class="hidden">
                         <div style="font-size:0.8rem; margin-bottom:6px;">📧 <span id="createProfileEmail"></span></div>
                         <p class="text-dim" style="font-size:0.7rem;">Publish your site and it'll appear on Explore for everyone.</p>
@@ -912,7 +263,7 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
         </div>
     </div>
 
-    <!-- ==================== EXPLORE PAGE ==================== -->
+    <!-- EXPLORE -->
     <div class="page" id="page-explore">
         <div class="explore-header">
             <h2>🔍 explore community sites</h2>
@@ -923,33 +274,36 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
         </div>
     </div>
 
-    <!-- ==================== SIGN IN MODAL ==================== -->
-    <div class="modal-overlay" id="signInModal">
+    <!-- AUTH MODAL -->
+    <div class="modal-overlay" id="authModal">
         <div class="modal">
-            <div id="signInStepEmail">
-                <h2>🔐 sign in with email</h2>
-                <p>Enter your email and we'll "send" you a 6-digit one-time code. Codes expire after 5 minutes and can only be used once. No passwords are ever stored.</p>
-                <input type="email" id="signInEmailInput" class="modal-input" placeholder="you@example.com">
+            <div class="modal-tabs">
+                <button class="modal-tab active" id="tabSignIn" data-tab="signin">sign in</button>
+                <button class="modal-tab" id="tabSignUp" data-tab="signup">sign up</button>
+            </div>
+
+            <!-- SIGN IN FORM -->
+            <div id="signInForm">
+                <h2>🔐 welcome back</h2>
+                <input type="email" id="signInEmail" class="modal-input" placeholder="email" autocomplete="username">
+                <input type="password" id="signInPassword" class="modal-input" placeholder="password" autocomplete="current-password">
                 <div class="modal-actions">
-                    <button class="btn btn-small" id="signInCancelBtn1">cancel</button>
-                    <button class="btn btn-primary btn-small" id="sendCodeBtn">send code</button>
+                    <button class="btn btn-small" id="signInCancelBtn">cancel</button>
+                    <button class="btn btn-primary btn-small" id="signInSubmitBtn">sign in</button>
                 </div>
             </div>
 
-            <div id="signInStepOtp" class="hidden">
-                <h2>📧 check your email</h2>
-                <p>We "sent" a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below. <span class="text-dim">(demo: code is shown in an alert)</span></p>
-                <div class="otp-box" id="otpBox">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="0" inputmode="numeric">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="1" inputmode="numeric">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="2" inputmode="numeric">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="3" inputmode="numeric">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="4" inputmode="numeric">
-                    <input type="text" maxlength="1" class="otp-digit" data-idx="5" inputmode="numeric">
-                </div>
+            <!-- SIGN UP FORM -->
+            <div id="signUpForm" class="hidden">
+                <h2>✨ create account</h2>
+                <input type="email" id="signUpEmail" class="modal-input" placeholder="email" autocomplete="username">
+                <input type="password" id="signUpPassword" class="modal-input" placeholder="password (min 8 chars)" autocomplete="new-password">
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                <div class="strength-text text-dim" id="strengthText"></div>
+                <input type="password" id="signUpPassword2" class="modal-input" placeholder="confirm password" autocomplete="new-password">
                 <div class="modal-actions">
-                    <button class="btn btn-small" id="signInCancelBtn2">cancel</button>
-                    <button class="btn btn-primary btn-small" id="verifyCodeBtn">verify &amp; sign in</button>
+                    <button class="btn btn-small" id="signUpCancelBtn">cancel</button>
+                    <button class="btn btn-primary btn-small" id="signUpSubmitBtn">create account</button>
                 </div>
             </div>
         </div>
@@ -957,21 +311,113 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
 
     <script>
         (function() {
-            // ========== STATE ==========
+            // ============================================================
+            // CRYPTO HELPERS — PBKDF2-SHA256, 210,000 iterations
+            // ============================================================
+            const PBKDF2_ITERATIONS = 210000;
+            const HASH_ALGO = 'SHA-256';
+            const SALT_BYTES = 16;
+            const KEY_BITS = 256;
+
             const STORAGE_KEYS = {
-                USER: 'tcaw_user_email',
+                USERS: 'tcaw_users_v2',        // array of { email, salt, hash, createdAt }
+                SESSION: 'tcaw_session_v2',    // { email, token } for current tab
                 API_KEY: 'tcaw_api_key',
                 SITES: 'tcaw_published_sites'
             };
 
-            let currentUserEmail = localStorage.getItem(STORAGE_KEYS.USER) || null;
-            let publishedSites = [];
-            let pendingOtp = null;
-            let otpSendCooldown = 0;
-            let currentPage = 'home';
-            let currentView = 'split'; // 'split' or 'tabs'
+            function bufToHex(buf) {
+                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
 
-            // ========== DOM REFS ==========
+            function hexToBuf(hex) {
+                const bytes = new Uint8Array(hex.length / 2);
+                for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+                return bytes.buffer;
+            }
+
+            async function deriveHash(password, saltHex) {
+                const enc = new TextEncoder();
+                const salt = hexToBuf(saltHex);
+                const keyMaterial = await crypto.subtle.importKey(
+                    'raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']
+                );
+                const bits = await crypto.subtle.deriveBits(
+                    { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: HASH_ALGO },
+                    keyMaterial, KEY_BITS
+                );
+                return bufToHex(bits);
+            }
+
+            function generateSalt() {
+                const salt = new Uint8Array(SALT_BYTES);
+                crypto.getRandomValues(salt);
+                return bufToHex(salt);
+            }
+
+            function generateToken() {
+                const token = new Uint8Array(32);
+                crypto.getRandomValues(token);
+                return bufToHex(token);
+            }
+
+            // constant-time string comparison to prevent timing attacks
+            function safeEqual(a, b) {
+                if (typeof a !== 'string' || typeof b !== 'string') return false;
+                if (a.length !== b.length) return false;
+                let result = 0;
+                for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+                return result === 0;
+            }
+
+            // ========== USER STORE ==========
+            function loadUsers() {
+                const raw = localStorage.getItem(STORAGE_KEYS.USERS);
+                if (!raw) return [];
+                try { return JSON.parse(raw); } catch (e) { return []; }
+            }
+
+            function saveUsers(users) {
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            }
+
+            function findUser(email) {
+                return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
+            }
+
+            // ========== SESSION ==========
+            function setSession(email) {
+                const session = { email, token: generateToken(), createdAt: Date.now() };
+                sessionStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+                // also mirror to localStorage so reload persists (still per-browser)
+                localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+                currentUserEmail = email;
+            }
+
+            function clearSession() {
+                sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+                localStorage.removeItem(STORAGE_KEYS.SESSION);
+                currentUserEmail = null;
+            }
+
+            function restoreSession() {
+                const raw = sessionStorage.getItem(STORAGE_KEYS.SESSION) ||
+                            localStorage.getItem(STORAGE_KEYS.SESSION);
+                if (!raw) return null;
+                try {
+                    const s = JSON.parse(raw);
+                    if (s && s.email && findUser(s.email)) return s.email;
+                } catch (e) {}
+                return null;
+            }
+
+            // ========== STATE ==========
+            let currentUserEmail = restoreSession();
+            let publishedSites = [];
+            let currentPage = 'home';
+            let currentView = 'split';
+
+            // ========== DOM ==========
             const pages = {
                 home: document.getElementById('page-home'),
                 create: document.getElementById('page-create'),
@@ -979,32 +425,36 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             };
             const navBtns = document.querySelectorAll('.nav-btn');
 
-            // home
             const homeCreateBtn = document.getElementById('homeCreateBtn');
             const homeExploreBtn = document.getElementById('homeExploreBtn');
             const logoHome = document.getElementById('logoHome');
             const titleHome = document.getElementById('titleHome');
 
-            // auth
             const displayEmail = document.getElementById('displayEmail');
             const loginToggleBtn = document.getElementById('loginToggleBtn');
-            const signInModal = document.getElementById('signInModal');
-            const signInStepEmail = document.getElementById('signInStepEmail');
-            const signInStepOtp = document.getElementById('signInStepOtp');
-            const signInEmailInput = document.getElementById('signInEmailInput');
-            const sendCodeBtn = document.getElementById('sendCodeBtn');
-            const verifyCodeBtn = document.getElementById('verifyCodeBtn');
-            const signInCancelBtn1 = document.getElementById('signInCancelBtn1');
-            const signInCancelBtn2 = document.getElementById('signInCancelBtn2');
-            const otpEmailDisplay = document.getElementById('otpEmailDisplay');
-            const otpInputs = document.querySelectorAll('.otp-digit');
 
-            // editors — split view
+            const authModal = document.getElementById('authModal');
+            const tabSignIn = document.getElementById('tabSignIn');
+            const tabSignUp = document.getElementById('tabSignUp');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+
+            const signInEmail = document.getElementById('signInEmail');
+            const signInPassword = document.getElementById('signInPassword');
+            const signInSubmitBtn = document.getElementById('signInSubmitBtn');
+            const signInCancelBtn = document.getElementById('signInCancelBtn');
+
+            const signUpEmail = document.getElementById('signUpEmail');
+            const signUpPassword = document.getElementById('signUpPassword');
+            const signUpPassword2 = document.getElementById('signUpPassword2');
+            const signUpSubmitBtn = document.getElementById('signUpSubmitBtn');
+            const signUpCancelBtn = document.getElementById('signUpCancelBtn');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
             const htmlEditor = document.getElementById('htmlEditor');
             const cssEditor = document.getElementById('cssEditor');
             const jsEditor = document.getElementById('jsEditor');
-
-            // editors — tab view
             const htmlEditorTab = document.getElementById('htmlEditorTab');
             const cssEditorTab = document.getElementById('cssEditorTab');
             const jsEditorTab = document.getElementById('jsEditorTab');
@@ -1020,249 +470,195 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             const apiKeyInput = document.getElementById('apiKeyInput');
             const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
 
-            // view toggles
             const viewToggle = document.getElementById('viewToggle');
             const splitView = document.getElementById('splitView');
             const tabbedView = document.getElementById('tabbedView');
             const editorTabs = document.querySelectorAll('.editor-tab');
             const tabPanels = document.querySelectorAll('.tab-panel');
 
-            // explore
             const exploreGrid = document.getElementById('exploreGrid');
             const exploreSearch = document.getElementById('exploreSearch');
 
-            // ========== PAGE NAVIGATION ==========
+            // ========== PAGE NAV ==========
             function showPage(name) {
                 if (!pages[name]) return;
                 currentPage = name;
                 Object.values(pages).forEach(p => p.classList.remove('active'));
                 pages[name].classList.add('active');
-                navBtns.forEach(b => {
-                    b.classList.toggle('active', b.dataset.page === name);
-                });
+                navBtns.forEach(b => b.classList.toggle('active', b.dataset.page === name));
                 if (name === 'explore') renderExplore();
                 if (name === 'create' && !previewFrame.src) runPreview();
                 window.scrollTo(0, 0);
             }
 
-            navBtns.forEach(btn => {
-                btn.addEventListener('click', () => showPage(btn.dataset.page));
-            });
+            navBtns.forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
             homeCreateBtn.addEventListener('click', () => showPage('create'));
             homeExploreBtn.addEventListener('click', () => showPage('explore'));
             logoHome.addEventListener('click', () => showPage('home'));
             titleHome.addEventListener('click', () => showPage('home'));
 
-            // ========== EDITOR SYNC BETWEEN VIEWS ==========
-            // Keep split and tab editors in sync so switching never loses work.
-            function syncFromSplitToTabs() {
-                htmlEditorTab.value = htmlEditor.value;
-                cssEditorTab.value = cssEditor.value;
-                jsEditorTab.value = jsEditor.value;
-            }
-            function syncFromTabsToSplit() {
-                htmlEditor.value = htmlEditorTab.value;
-                cssEditor.value = cssEditorTab.value;
-                jsEditor.value = jsEditorTab.value;
+            // ========== AUTH UI ==========
+            function openAuth(mode) {
+                authModal.classList.add('active');
+                switchAuthTab(mode || 'signin');
+                signInEmail.value = '';
+                signInPassword.value = '';
+                signUpEmail.value = '';
+                signUpPassword.value = '';
+                signUpPassword2.value = '';
+                updateStrength('');
             }
 
-            // live sync while typing (cheap, textareas are small)
-            htmlEditor.addEventListener('input', () => { htmlEditorTab.value = htmlEditor.value; });
-            cssEditor.addEventListener('input', () => { cssEditorTab.value = cssEditor.value; });
-            jsEditor.addEventListener('input', () => { jsEditorTab.value = jsEditor.value; });
-            htmlEditorTab.addEventListener('input', () => { htmlEditor.value = htmlEditorTab.value; });
-            cssEditorTab.addEventListener('input', () => { cssEditor.value = cssEditorTab.value; });
-            jsEditorTab.addEventListener('input', () => { jsEditor.value = jsEditorTab.value; });
+            function closeAuth() {
+                authModal.classList.remove('active');
+            }
 
-            // ========== VIEW TOGGLE (split / tabs) ==========
-            function setView(view) {
-                currentView = view;
-                viewToggle.querySelectorAll('button').forEach(b => {
-                    b.classList.toggle('active', b.dataset.view === view);
-                });
-                if (view === 'split') {
-                    syncFromTabsToSplit();
-                    splitView.classList.remove('hidden');
-                    tabbedView.classList.remove('visible');
+            function switchAuthTab(mode) {
+                if (mode === 'signin') {
+                    tabSignIn.classList.add('active');
+                    tabSignUp.classList.remove('active');
+                    signInForm.classList.remove('hidden');
+                    signUpForm.classList.add('hidden');
                 } else {
-                    syncFromSplitToTabs();
-                    splitView.classList.add('hidden');
-                    tabbedView.classList.add('visible');
+                    tabSignUp.classList.add('active');
+                    tabSignIn.classList.remove('active');
+                    signUpForm.classList.remove('hidden');
+                    signInForm.classList.add('hidden');
                 }
             }
 
-            viewToggle.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', () => setView(btn.dataset.view));
-            });
-
-            // tab switching inside tabbed view
-            editorTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.dataset.tab;
-                    editorTabs.forEach(t => t.classList.toggle('active', t === tab));
-                    tabPanels.forEach(p => {
-                        p.classList.toggle('active', p.dataset.panel === target);
-                    });
-                });
-            });
-
-            // ========== AUTH: single-use OTP ==========
-            const OTP_TTL_MS = 5 * 60 * 1000;
-
-            function generateOtpCode() {
-                const arr = new Uint32Array(1);
-                crypto.getRandomValues(arr);
-                return String(arr[0] % 1000000).padStart(6, '0');
-            }
-
-            function openSignIn() {
-                signInStepEmail.classList.remove('hidden');
-                signInStepOtp.classList.add('hidden');
-                signInEmailInput.value = '';
-                signInModal.classList.add('active');
-                setTimeout(() => signInEmailInput.focus(), 50);
-            }
-
-            function closeSignIn() {
-                signInModal.classList.remove('active');
-                otpInputs.forEach(i => i.value = '');
-                if (pendingOtp && !pendingOtp.used) {
-                    pendingOtp.used = true;
-                }
-                pendingOtp = null;
-            }
-
-            function signOut() {
-                if (pendingOtp) {
-                    pendingOtp.used = true;
-                    pendingOtp = null;
-                }
-                currentUserEmail = null;
-                localStorage.removeItem(STORAGE_KEYS.USER);
-                updateAuthUI();
-            }
+            tabSignIn.addEventListener('click', () => switchAuthTab('signin'));
+            tabSignUp.addEventListener('click', () => switchAuthTab('signup'));
+            signInCancelBtn.addEventListener('click', closeAuth);
+            signUpCancelBtn.addEventListener('click', closeAuth);
 
             loginToggleBtn.addEventListener('click', () => {
                 if (currentUserEmail) {
-                    if (confirm('Sign out of ' + currentUserEmail + '?')) signOut();
+                    if (confirm('Sign out of ' + currentUserEmail + '?')) {
+                        clearSession();
+                        updateAuthUI();
+                    }
                 } else {
-                    openSignIn();
+                    openAuth('signin');
                 }
             });
 
-            signInCancelBtn1.addEventListener('click', closeSignIn);
-            signInCancelBtn2.addEventListener('click', closeSignIn);
+            // ========== PASSWORD STRENGTH ==========
+            function calcStrength(pw) {
+                let score = 0;
+                if (pw.length >= 8) score++;
+                if (pw.length >= 12) score++;
+                if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+                if (/\d/.test(pw)) score++;
+                if (/[^a-zA-Z0-9]/.test(pw)) score++;
+                return Math.min(score, 5);
+            }
 
-            sendCodeBtn.addEventListener('click', async () => {
-                const email = signInEmailInput.value.trim();
+            function updateStrength(pw) {
+                const s = calcStrength(pw);
+                const pct = (s / 5) * 100;
+                strengthFill.style.width = pct + '%';
+                const colors = ['#f55', '#f55', '#fa0', '#ff0', '#0f0', '#0f0'];
+                strengthFill.style.background = colors[s];
+                const labels = ['', 'very weak', 'weak', 'fair', 'good', 'strong'];
+                strengthText.textContent = pw ? labels[s] : '';
+                strengthText.style.color = colors[s];
+            }
+
+            signUpPassword.addEventListener('input', () => updateStrength(signUpPassword.value));
+
+            // ========== SIGN UP ==========
+            signUpSubmitBtn.addEventListener('click', async () => {
+                const email = signUpEmail.value.trim();
+                const pw = signUpPassword.value;
+                const pw2 = signUpPassword2.value;
+
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                     alert('Please enter a valid email address.');
                     return;
                 }
-                if (Date.now() < otpSendCooldown) {
-                    const wait = Math.ceil((otpSendCooldown - Date.now()) / 1000);
-                    alert('Please wait ' + wait + 's before requesting another code.');
+                if (pw.length < 8) {
+                    alert('Password must be at least 8 characters.');
+                    return;
+                }
+                if (pw !== pw2) {
+                    alert('Passwords do not match.');
+                    return;
+                }
+                if (findUser(email)) {
+                    alert('An account with that email already exists.');
                     return;
                 }
 
-                const code = generateOtpCode();
-                pendingOtp = {
-                    email,
-                    code,
-                    expires: Date.now() + OTP_TTL_MS,
-                    used: false,
-                    attempts: 0
-                };
-                otpSendCooldown = Date.now() + 20000;
+                signUpSubmitBtn.disabled = true;
+                signUpSubmitBtn.textContent = 'creating...';
 
-                // ---- Replace below with EmailJS ----
-                // emailjs.init("YOUR_PUBLIC_KEY");
-                // await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                //     to_email: email, otp_code: code, expires_minutes: 5
-                // });
-                console.log('%c📧 [tcawhtml demo email]', 'color:#0f0;font-weight:bold;', 'Code for ' + email + ' = ' + code);
-                alert('📧 Demo email sent to ' + email + '\n\nYour one-time code is: ' + code +
-                      '\n\nThis code expires in 5 minutes and can only be used ONCE.');
+                try {
+                    const salt = generateSalt();
+                    const hash = await deriveHash(pw, salt);
+                    const users = loadUsers();
+                    users.push({
+                        email: email.toLowerCase(),
+                        salt,
+                        hash,
+                        iterations: PBKDF2_ITERATIONS,
+                        algo: HASH_ALGO,
+                        createdAt: Date.now()
+                    });
+                    saveUsers(users);
 
-                otpEmailDisplay.textContent = email;
-                signInStepEmail.classList.add('hidden');
-                signInStepOtp.classList.remove('hidden');
-                otpInputs.forEach(i => i.value = '');
-                setTimeout(() => otpInputs[0].focus(), 50);
+                    // auto-login
+                    setSession(email.toLowerCase());
+                    closeAuth();
+                    updateAuthUI();
+                    alert('✅ Account created — you are signed in as ' + email);
+                } catch (err) {
+                    console.error('Signup failed:', err);
+                    alert('Failed to create account: ' + (err.message || err));
+                } finally {
+                    signUpSubmitBtn.disabled = false;
+                    signUpSubmitBtn.textContent = 'create account';
+                }
             });
 
-            otpInputs.forEach((input, idx) => {
-                input.addEventListener('input', (e) => {
-                    const val = e.target.value.replace(/\D/g, '');
-                    e.target.value = val.slice(0, 1);
-                    if (val && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
-                });
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && !e.target.value && idx > 0) otpInputs[idx - 1].focus();
-                    if (e.key === 'Enter') verifyCodeBtn.click();
-                });
-                input.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-                    for (let i = 0; i < otpInputs.length; i++) {
-                        if (paste[i]) otpInputs[i].value = paste[i];
-                    }
-                    otpInputs[Math.min(paste.length, otpInputs.length - 1)].focus();
-                });
-            });
+            // ========== SIGN IN ==========
+            signInSubmitBtn.addEventListener('click', async () => {
+                const email = signInEmail.value.trim().toLowerCase();
+                const pw = signInPassword.value;
 
-            verifyCodeBtn.addEventListener('click', () => {
-                if (!pendingOtp) {
-                    alert('No pending code. Please request a new one.');
-                    closeSignIn();
-                    return;
-                }
-                if (pendingOtp.used) {
-                    alert('This code has already been used. Please request a new one.');
-                    pendingOtp = null;
-                    closeSignIn();
-                    return;
-                }
-                if (Date.now() > pendingOtp.expires) {
-                    pendingOtp.used = true;
-                    pendingOtp = null;
-                    alert('This code has expired. Please request a new one.');
-                    closeSignIn();
+                if (!email || !pw) {
+                    alert('Please enter both email and password.');
                     return;
                 }
 
-                const entered = Array.from(otpInputs).map(i => i.value).join('');
-                if (entered.length !== 6) {
-                    alert('Please enter all 6 digits.');
+                const user = findUser(email);
+                // constant-ish response time: always do one hash even if user not found
+                const saltToUse = user ? user.salt : generateSalt();
+                let hash;
+                try {
+                    hash = await deriveHash(pw, saltToUse);
+                } catch (err) {
+                    alert('Login failed: crypto error.');
                     return;
                 }
 
-                if (entered !== pendingOtp.code) {
-                    pendingOtp.attempts++;
-                    if (pendingOtp.attempts >= 5) {
-                        pendingOtp.used = true;
-                        pendingOtp = null;
-                        alert('Too many incorrect attempts. Code invalidated. Please request a new one.');
-                        closeSignIn();
-                    } else {
-                        alert('Incorrect code. You have ' + (5 - pendingOtp.attempts) + ' attempt(s) left.');
-                        otpInputs.forEach(i => i.value = '');
-                        otpInputs[0].focus();
-                    }
+                if (!user) {
+                    alert('Invalid email or password.');
+                    return;
+                }
+                if (!safeEqual(hash, user.hash)) {
+                    alert('Invalid email or password.');
                     return;
                 }
 
-                // success — burn code immediately
-                pendingOtp.used = true;
-                pendingOtp = null;
-                otpInputs.forEach(i => i.value = '');
-
-                currentUserEmail = signInEmailInput.value.trim();
-                localStorage.setItem(STORAGE_KEYS.USER, currentUserEmail);
-                closeSignIn();
+                setSession(user.email);
+                closeAuth();
                 updateAuthUI();
-                alert('✅ Signed in as ' + currentUserEmail);
             });
+
+            // allow Enter key in auth inputs
+            signInPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') signInSubmitBtn.click(); });
+            signUpPassword2.addEventListener('keydown', (e) => { if (e.key === 'Enter') signUpSubmitBtn.click(); });
 
             function updateAuthUI() {
                 if (currentUserEmail) {
@@ -1280,43 +676,77 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 renderExplore();
             }
 
-            // ========== EDITOR / PREVIEW ==========
+            // ========== EDITOR SYNC ==========
+            function syncFromSplitToTabs() {
+                htmlEditorTab.value = htmlEditor.value;
+                cssEditorTab.value = cssEditor.value;
+                jsEditorTab.value = jsEditor.value;
+            }
+            function syncFromTabsToSplit() {
+                htmlEditor.value = htmlEditorTab.value;
+                cssEditor.value = cssEditorTab.value;
+                jsEditor.value = jsEditorTab.value;
+            }
+
+            htmlEditor.addEventListener('input', () => { htmlEditorTab.value = htmlEditor.value; });
+            cssEditor.addEventListener('input', () => { cssEditorTab.value = cssEditor.value; });
+            jsEditor.addEventListener('input', () => { jsEditorTab.value = jsEditor.value; });
+            htmlEditorTab.addEventListener('input', () => { htmlEditor.value = htmlEditorTab.value; });
+            cssEditorTab.addEventListener('input', () => { cssEditor.value = cssEditorTab.value; });
+            jsEditorTab.addEventListener('input', () => { jsEditor.value = jsEditorTab.value; });
+
+            function setView(view) {
+                currentView = view;
+                viewToggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+                if (view === 'split') {
+                    syncFromTabsToSplit();
+                    splitView.classList.remove('hidden');
+                    tabbedView.classList.remove('visible');
+                } else {
+                    syncFromSplitToTabs();
+                    splitView.classList.add('hidden');
+                    tabbedView.classList.add('visible');
+                }
+            }
+            viewToggle.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => setView(btn.dataset.view));
+            });
+
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    editorTabs.forEach(t => t.classList.toggle('active', t === tab));
+                    tabPanels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+                });
+            });
+
+            // ========== PREVIEW ==========
             function buildFullDoc() {
-                const html = htmlEditor.value;
-                const css = cssEditor.value;
-                const js = jsEditor.value;
                 return `<!DOCTYPE html>
 <html>
-<head><style>${css}</style></head>
-<body>${html}
-<script>${js}<\/script>
+<head><style>${cssEditor.value}</style></head>
+<body>${htmlEditor.value}
+<script>${jsEditor.value}<\/script>
 </body>
 </html>`;
             }
 
             function runPreview() {
                 const blob = new Blob([buildFullDoc()], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                previewFrame.src = url;
+                previewFrame.src = URL.createObjectURL(blob);
             }
 
             function openPreviewInNewTab() {
                 const blob = new Blob([buildFullDoc()], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
+                window.open(URL.createObjectURL(blob), '_blank');
             }
 
             function resetEditors() {
-                const defaultHtml = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
-                const defaultCss = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
-                const defaultJs = `console.log('tcawhtml ready');`;
-
-                htmlEditor.value = defaultHtml;
-                cssEditor.value = defaultCss;
-                jsEditor.value = defaultJs;
-                htmlEditorTab.value = defaultHtml;
-                cssEditorTab.value = defaultCss;
-                jsEditorTab.value = defaultJs;
+                const dHtml = `<h1 style="color:#0f0; text-shadow: 0 0 10px #0f0;">tcawhtml</h1>\n<p>live playground</p>`;
+                const dCss = `body {\n    background: #0a0f0a;\n    color: #0f0;\n    font-family: monospace;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    height: 100vh;\n    margin: 0;\n}\nh1 { text-shadow: 0 0 20px #0f0; }`;
+                const dJs = `console.log('tcawhtml ready');`;
+                htmlEditor.value = dHtml; cssEditor.value = dCss; jsEditor.value = dJs;
+                htmlEditorTab.value = dHtml; cssEditorTab.value = dCss; jsEditorTab.value = dJs;
                 runPreview();
             }
 
@@ -1331,43 +761,36 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 }
             });
 
-            // ========== PUBLISH / SAVE SITE ==========
+            // ========== PUBLISH ==========
             function loadSites() {
                 const raw = localStorage.getItem(STORAGE_KEYS.SITES);
-                if (raw) {
-                    try { publishedSites = JSON.parse(raw); } catch (e) { publishedSites = []; }
-                } else {
-                    publishedSites = [];
-                }
+                if (raw) { try { publishedSites = JSON.parse(raw); } catch (e) { publishedSites = []; } }
+                else { publishedSites = []; }
             }
-
             function saveSites() {
                 localStorage.setItem(STORAGE_KEYS.SITES, JSON.stringify(publishedSites));
             }
 
             function publishSite() {
                 if (!currentUserEmail) {
-                    if (confirm('You need to be signed in to publish. Sign in now?')) openSignIn();
+                    if (confirm('You need to be signed in to publish. Sign in now?')) openAuth('signin');
                     return;
                 }
                 const name = prompt('Name your site / game:', 'my-neon-site');
                 if (!name) return;
 
-                const site = {
+                publishedSites.unshift({
                     id: 'site_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
                     name: name.trim().slice(0, 60),
                     content: buildFullDoc(),
                     author: currentUserEmail,
                     createdAt: Date.now()
-                };
-
-                publishedSites.unshift(site);
+                });
                 saveSites();
                 renderExplore();
-                alert('🚀 Published "' + site.name + '" to Explore!');
+                alert('🚀 Published "' + name + '" to Explore!');
                 showPage('explore');
             }
-
             saveSiteBtn.addEventListener('click', publishSite);
 
             // ========== EXPLORE ==========
@@ -1375,13 +798,7 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 if (!exploreGrid) return;
                 const query = (exploreSearch.value || '').toLowerCase().trim();
                 let list = publishedSites.slice();
-
-                if (query) {
-                    list = list.filter(s =>
-                        s.name.toLowerCase().includes(query) ||
-                        (s.author || '').toLowerCase().includes(query)
-                    );
-                }
+                if (query) list = list.filter(s => s.name.toLowerCase().includes(query) || (s.author || '').toLowerCase().includes(query));
 
                 if (!list.length) {
                     exploreGrid.innerHTML = `<div class="empty-state">${publishedSites.length ? 'no sites match your search.' : 'no sites published yet — head to Create and publish the first one!'}</div>`;
@@ -1403,69 +820,47 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                     </div>`;
                 }).join('');
 
-                exploreGrid.querySelectorAll('[data-play]').forEach(b => {
-                    b.addEventListener('click', () => playSite(b.dataset.play));
-                });
-                exploreGrid.querySelectorAll('[data-view]').forEach(b => {
-                    b.addEventListener('click', () => viewSite(b.dataset.view));
-                });
-                exploreGrid.querySelectorAll('[data-delete]').forEach(b => {
-                    b.addEventListener('click', () => deleteSite(b.dataset.delete));
-                });
+                exploreGrid.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => playSite(b.dataset.play)));
+                exploreGrid.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => viewSite(b.dataset.view)));
+                exploreGrid.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deleteSite(b.dataset.delete)));
             }
 
-            function findSite(id) {
-                return publishedSites.find(s => s.id === id);
-            }
+            function findSite(id) { return publishedSites.find(s => s.id === id); }
 
             function playSite(id) {
                 const site = findSite(id);
                 if (!site) return;
                 const w = window.open();
-                w.document.open();
-                w.document.write(site.content);
-                w.document.close();
+                w.document.open(); w.document.write(site.content); w.document.close();
             }
 
             function viewSite(id) {
                 const site = findSite(id);
                 if (!site) return;
-                if (confirm('Load "' + site.name + '" into the editor to view / remix it?')) {
-                    const content = site.content;
-                    const styleMatch = content.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
-                    const scriptMatch = content.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
-                    let htmlBody = content;
-                    if (styleMatch) htmlBody = htmlBody.replace(styleMatch[0], '');
-                    if (scriptMatch) htmlBody = htmlBody.replace(scriptMatch[0], '');
-                    htmlBody = htmlBody.replace(/<!DOCTYPE[^>]*>/i, '');
-                    htmlBody = htmlBody.replace(/<\/?html[^>]*>/gi, '');
-                    htmlBody = htmlBody.replace(/<\/?head[^>]*>/gi, '');
-                    htmlBody = htmlBody.replace(/<\/?body[^>]*>/gi, '');
+                if (!confirm('Load "' + site.name + '" into the editor?')) return;
 
-                    const finalHtml = htmlBody.trim();
-                    const finalCss = styleMatch ? styleMatch[1].trim() : '';
-                    const finalJs = scriptMatch ? scriptMatch[1].trim() : '';
+                const styleMatch = site.content.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+                const scriptMatch = site.content.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+                let htmlBody = site.content;
+                if (styleMatch) htmlBody = htmlBody.replace(styleMatch[0], '');
+                if (scriptMatch) htmlBody = htmlBody.replace(scriptMatch[0], '');
+                htmlBody = htmlBody.replace(/<!DOCTYPE[^>]*>/i, '').replace(/<\/?html[^>]*>/gi, '').replace(/<\/?head[^>]*>/gi, '').replace(/<\/?body[^>]*>/gi, '');
 
-                    htmlEditor.value = finalHtml;
-                    cssEditor.value = finalCss;
-                    jsEditor.value = finalJs;
-                    htmlEditorTab.value = finalHtml;
-                    cssEditorTab.value = finalCss;
-                    jsEditorTab.value = finalJs;
+                const finalHtml = htmlBody.trim();
+                const finalCss = styleMatch ? styleMatch[1].trim() : '';
+                const finalJs = scriptMatch ? scriptMatch[1].trim() : '';
 
-                    showPage('create');
-                    setTimeout(runPreview, 100);
-                }
+                htmlEditor.value = finalHtml; cssEditor.value = finalCss; jsEditor.value = finalJs;
+                htmlEditorTab.value = finalHtml; cssEditorTab.value = finalCss; jsEditorTab.value = finalJs;
+
+                showPage('create');
+                setTimeout(runPreview, 100);
             }
 
             function deleteSite(id) {
                 const site = findSite(id);
-                if (!site) return;
-                if (site.author !== currentUserEmail) {
-                    alert('You can only delete your own sites.');
-                    return;
-                }
-                if (!confirm('Delete "' + site.name + '"? This cannot be undone.')) return;
+                if (!site || site.author !== currentUserEmail) return;
+                if (!confirm('Delete "' + site.name + '"? Cannot be undone.')) return;
                 publishedSites = publishedSites.filter(s => s.id !== id);
                 saveSites();
                 renderExplore();
@@ -1474,17 +869,11 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
             exploreSearch.addEventListener('input', renderExplore);
 
             // ========== API KEY ==========
-            function saveApiKey() {
+            saveApiKeyBtn.addEventListener('click', () => {
                 const key = apiKeyInput.value.trim();
-                if (key) {
-                    localStorage.setItem(STORAGE_KEYS.API_KEY, key);
-                    alert('API key saved locally (only on this device).');
-                } else {
-                    localStorage.removeItem(STORAGE_KEYS.API_KEY);
-                    alert('API key removed.');
-                }
-            }
-            saveApiKeyBtn.addEventListener('click', saveApiKey);
+                if (key) { localStorage.setItem(STORAGE_KEYS.API_KEY, key); alert('API key saved locally.'); }
+                else { localStorage.removeItem(STORAGE_KEYS.API_KEY); alert('API key removed.'); }
+            });
 
             // ========== UTIL ==========
             function escapeHtml(text) {
@@ -1499,7 +888,6 @@ h1 { text-shadow: 0 0 20px #0f0; }</textarea>
                 const storedKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
                 if (storedKey) apiKeyInput.value = storedKey;
                 updateAuthUI();
-                // ensure editors start in sync
                 syncFromSplitToTabs();
                 runPreview();
                 renderExplore();
